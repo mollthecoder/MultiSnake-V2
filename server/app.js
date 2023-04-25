@@ -8,9 +8,9 @@ const app = express();
 
 
 const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
 
+
+//app.use(morgan("dev"));
 
 app.use(express.static(resolve("./public")));
 nunjucks.configure('views', {
@@ -18,10 +18,9 @@ nunjucks.configure('views', {
     express: app
 });
 app.use(router);
-app.use(morgan("dev"));
 
 
 server.listen(3000, () => {
   console.log('Server Live');
 });
-module.exports = { server,app,io }
+module.exports = { server,app }

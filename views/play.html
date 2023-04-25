@@ -1,0 +1,14 @@
+{% extends "temp.html" %}
+
+{% block main %}
+<canvas width = "500" height = "500"></canvas>
+{% endblock %}
+
+{% block footer %}
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io();
+</script>
+<script src = "/js/play.js"></script>
+
+{% endblock %}
