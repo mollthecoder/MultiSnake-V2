@@ -1,34 +1,44 @@
 ---
 - room # room object
-  - key # uid for the room
-  - snakes # array of snake objects
-  - walls # array of wall objects
-  - apple # coordinate object
-
+  - key: # uid for the room
+  - type: # type of room
+  - snakes: # array of snake objects
+  - walls: # array of wall objects
+  - apple: # coordinate object
+  - size: # integer (all maps are square)
+  - tick(): # ticks the room
+  - reset(): # resets the room
+  - addSnake(snake): # adds a snake to the room
+  - newApplePos(): # returns x & y position of new apple, updates apple position
+  - getApplePos(): # returns apple position
+  - dump(): # returns all data in room
+  - is_block_occupied(target): # true if the block is occupied by apple, snake, or walls
+  - scale2board(number): # contrains a number to the size of the board
+  - killSnake(uid): # kills snake with specified uid
+  
 ---
 - snake
-  - body # array of body part objects
-  - direction # one of "up" "down" "left" "right"
-  - score # length of body
-  - speed # one of 1 | 2
+  - uid: # id of snake
+  - name: # name of snake
+  - body: # array of body part objects
+  - direction: # one of "up" "down" "left" "right"
+  - score: # length of body
+  - speed: # one of 1 | 2
+  - room: # reference to room
+  - eating: # true if the snake is eating, false otherwis
+  - move(): # moves snake in direction
+  - checkAction(): # checks death/eat apple
+  - changeDirection(): # changes snake direction
 
----
-- part
-  - coords # coordinate object
-  - color # color object
 
 ---
 - wall
-  - coords # coordinate object
-  - color # color object
+  - coords: # coordinate object
+
 
 ---
-- coordinate
-  - x # x value of coordinate
-  - y # y value of coordinate
-  - z # optional (to make a vector)
-
----
-- color
-  - hex # hex color code
-  - rgb # rgb color code
+- helpers
+  - generateName(): # generates random name
+  - oddsOf(percent): # true or false depending on percent
+  - json2array(json): # converts json to an array
+  - sumArrays(...arrays): # adds given arrays together

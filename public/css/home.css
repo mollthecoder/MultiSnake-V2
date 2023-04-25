@@ -75,6 +75,7 @@ main.below{
 }
 img, video{
   display: block;
+  max-width:100%;
   padding: 10px;
 }
 .center h1, .center div{
