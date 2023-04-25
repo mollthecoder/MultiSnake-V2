@@ -54,7 +54,6 @@ class Snake{
             }else if(enemySnakeScore == ourScore){
               room.snakes[i].kill();
               this.kill();
-              break;
             }
           }else{
             this.kill();
