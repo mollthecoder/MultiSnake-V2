@@ -1,0 +1,34 @@
+---
+- room # room object
+  - key # uid for the room
+  - snakes # array of snake objects
+  - walls # array of wall objects
+  - apple # coordinate object
+
+---
+- snake
+  - body # array of body part objects
+  - direction # one of "up" "down" "left" "right"
+  - score # length of body
+  - speed # one of 1 | 2
+
+---
+- part
+  - coords # coordinate object
+  - color # color object
+
+---
+- wall
+  - coords # coordinate object
+  - color # color object
+
+---
+- coordinate
+  - x # x value of coordinate
+  - y # y value of coordinate
+  - z # optional (to make a vector)
+
+---
+- color
+  - hex # hex color code
+  - rgb # rgb color code
