@@ -26,6 +26,9 @@ class Room {
     this.winCondition = winCondition;
 	}
 	tick() {
+    if(this.walls.length > (this.size*this.size*1/3)){
+      this.reset();
+    }
     if((new Date().getTime() - this.lastTouched)/1000/60 > 1){
       this.reset();
       this.needToBeDeleted = true;
@@ -59,8 +62,8 @@ class Room {
 		this.walls = [];
 		this.apple = this.newApplePos();
 	}
-	addSnake(snake, isBot = false) {
-    if(!isBot){
+	addSnake(snake) {
+    if(!snake.isBot){
       this.lastTouched = new Date().getTime();
     }
 		this.snakes.push(snake);
