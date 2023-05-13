@@ -89,7 +89,7 @@ io.on("connection",(socket)=>{
     var room = data.room;
     io.to(room).emit("chat",{
       from: xss(from),
-      message: xss(message,xssoptions)
+      message: xss(message,xssOptions)
     })
   })
 });
