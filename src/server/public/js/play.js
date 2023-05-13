@@ -527,7 +527,7 @@ socket.on("win",(data)=>{
 document.getElementById("sendchat").onclick = sendChat;
 function sendChat(){
   var chat = document.getElementById("chatinput").value;
-
+ document.getElementById("chatinput").value = "";
   socket.emit("chat",{
     from: username,
     message: chat,
@@ -537,7 +537,6 @@ function sendChat(){
 socket.on("chat",(data)=>{
   console.log(data);
   var string = `<p class="message"><span class = "msender">${data.from}:</span> ${data.message}</p>`;
-  document.getElementById("chatinput").value = "";
   document.querySelectorAll(".message_list")[0].innerHTML += string;
   scrollToBottom(document.querySelectorAll(".message_list")[0]);
 })

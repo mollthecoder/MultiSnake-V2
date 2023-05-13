@@ -4,7 +4,20 @@ const { uid, generateName, json2array, pickColor } = require("../etc/helpers.js"
 const { Room } = require("../objects/room.js");
 const { io } = require("./webs.js");
 const { Bot } = require("../bots/bots.js");
-
+var xss = require("xss");
+var xssOptions = {
+  a: ["href"],
+  img: ["src","title","style","alt"],
+  h1: ["title","style"],
+  h2: ["title","style"],
+  h3: ["title","style"],
+  h4: ["title","style"],
+  h5: ["title","style"],
+  h6: ["title","style"],
+  b: ["title","style"],
+  i: ["title","style"],
+  u: ["title","style"]
+}
 var SPAWN_REQUEST_TRACKER = {};
 io.on("connection",(socket)=>{
   socket.on("request_optimal_spawn",(data)=>{
@@ -75,8 +88,8 @@ io.on("connection",(socket)=>{
     var message = data.message;
     var room = data.room;
     io.to(room).emit("chat",{
-      from,
-      message,
+      from: xss(from),
+      message: xss(message,xssoptions)
     })
   })
 });

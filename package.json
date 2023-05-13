@@ -20,6 +20,7 @@
     "node-fetch": "^3.2.6",
     "nunjucks": "^3.2.4",
     "server": "^1.0.38",
-    "socket.io": "^4.6.1"
+    "socket.io": "^4.6.1",
+    "xss": "^1.0.14"
   }
 }
