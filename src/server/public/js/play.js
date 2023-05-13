@@ -207,6 +207,9 @@ function drawGrid(startX, startY, endX, endY, gridCellSize) {
     }
   }
 }
+function scrollToBottom(element) {
+  element.scroll({ top: element.scrollHeight, behavior: 'smooth' });
+}
 
 // GAME SCREENS //
 function drawBoard(){
@@ -532,9 +535,11 @@ function sendChat(){
   });
 }
 socket.on("chat",(data)=>{
+  console.log(data);
   var string = `<p class="message"><span class = "msender">${data.from}:</span> ${data.message}</p>`;
   document.getElementById("chatinput").value = "";
   document.querySelectorAll(".message_list")[0].innerHTML += string;
+  scrollToBottom(document.querySelectorAll(".message_list")[0]);
 })
 
 // INITIALIZERS //
