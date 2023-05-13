@@ -10,6 +10,9 @@ window.roomopen = false;
 document.getElementById('join').addEventListener('click',(e)=>{
   openRoom();
 });
+document.getElementById("username").oninput = (e)=>{
+  localStorage.setItem("username",e.target.value);
+}
 document.addEventListener('keypress',(e)=>{
   if(e.which == 13){
     if(!window.roomopen){
@@ -17,8 +20,12 @@ document.addEventListener('keypress',(e)=>{
     }
   }
 });
+if(localStorage.getItem("username")){
+  document.getElementById("username").value = localStorage.getItem("username");
+}
 function openRoom(){
   var username = document.getElementById('username').value;
+  localStorage.setItem("username",username);
   document.getElementById('username').remove();
   document.getElementById('join').remove();
   document.getElementById('big').remove();
@@ -43,12 +50,12 @@ function openRoom(){
     classicContainer.appendChild(classiclegend);
 
     // loop through room creation code and create 3 rooms
-    for(var i = 0; i < 3; i++){
+    for(var i = 0; i < 5; i++){
       // create a link to the room, use API to see how many people are on. Append to UI container
       var a = document.createElement('a');
-      a.href = "/play?username="+username+"&room=classic"+i;
-      var online = (roomsJSON["classic"+i]) ? roomsJSON["classic"+i].snake_quantity || 0 : 0;
-      linkText = document.createTextNode('Classic-'+i+' | Online: '+ online);
+      a.href = "/play/classic_"+i;
+      var online = (roomsJSON["classic_"+i]) ? roomsJSON["classic_"+i].snake_quantity || 0 : 0;
+      linkText = document.createTextNode('Classic-'+i+' | Online: '+ Math.max(online,3));
       a.appendChild(linkText);
       a.classList.add('room');
       classicContainer.appendChild(a);
@@ -56,47 +63,6 @@ function openRoom(){
 
     // append container to DOm
     document.getElementById('rooms-plain').appendChild(classicContainer);
-
-    // Loop through mods
-    [
-      {
-        'name':'Small',
-        'type':'small'
-      },
-      {
-        'name':'Fog',
-        'type':'fog'
-      },
-      {
-        'name':'Tag',
-        'type':'tag'
-      },
-      {
-        'name':'Redlight',
-        'type':'redgreen'
-      }
-    ].forEach((d)=>{
-      // create UI container for mod
-      var modContainer = document.createElement('fieldset');
-      modContainer.classList.add('mod-container');
-      var legend = document.createElement('legend');
-      legend.appendChild(document.createTextNode(d.name));
-      modContainer.id = "mod-container-"+d.type;
-      modContainer.appendChild(legend);
-      // create 2 rooms per mod
-        for(var i = 0; i < 2; i++){
-          // create link to room and append to container
-          var a = document.createElement('a');
-          a.href = "/play?username="+username+"&room="+d.type+i+"&type="+d.type;
-          var online = (roomsJSON[d.type+i]) ? roomsJSON[d.type+i].snake_quantity || 0 : 0;
-          linkText = document.createTextNode(d.name+'-'+i+' | Online: '+ online);
-          a.appendChild(linkText);
-          a.classList.add('room');
-          modContainer.appendChild(a);
-        }
-      // append container to DOm
-      document.getElementById('rooms-plain').appendChild(modContainer)
-    })
     
   });
 }

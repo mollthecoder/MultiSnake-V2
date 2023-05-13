@@ -1,44 +1,126 @@
----
-- room # room object
-  - key: # uid for the room
-  - type: # type of room
-  - snakes: # array of snake objects
-  - walls: # array of wall objects
-  - apple: # coordinate object
-  - size: # integer (all maps are square)
-  - tick(): # ticks the room
-  - reset(): # resets the room
-  - addSnake(snake): # adds a snake to the room
-  - newApplePos(): # returns x & y position of new apple, updates apple position
-  - getApplePos(): # returns apple position
-  - dump(): # returns all data in room
-  - is_block_occupied(target): # true if the block is occupied by apple, snake, or walls
-  - scale2board(number): # contrains a number to the size of the board
-  - killSnake(uid): # kills snake with specified uid
-  
----
-- snake
-  - uid: # id of snake
-  - name: # name of snake
-  - body: # array of body part objects
-  - direction: # one of "up" "down" "left" "right"
-  - score: # length of body
-  - speed: # one of 1 | 2
-  - room: # reference to room
-  - eating: # true if the snake is eating, false otherwis
-  - move(): # moves snake in direction
-  - checkAction(): # checks death/eat apple
-  - changeDirection(): # changes snake direction
-
+- src
+  index.js:
+  -bots
+    bots.js:
+  - etc
+    helpers.js:
+  - managers
+    gameManager.js:
+    rooManager.js:
+    internals.js:
+  - objects
+    snake.js:
+    room.js:
+    wall.js:
+  - server
+    app.js:
+    eventListener.js:
+    events.js:
+    webs.js:
+    internals.js:
 
 ---
-- wall
-  - coords: # coordinate object
-
+index.js # require all server modules and manager modules
 
 ---
-- helpers
-  - generateName(): # generates random name
-  - oddsOf(percent): # true or false depending on percent
-  - json2array(json): # converts json to an array
-  - sumArrays(...arrays): # adds given arrays together
+bots.js (unfinished)
+
+---
+helpers.js
+
+  - generateName(): Str # generates a random name
+  - oddsOf(float0-100): Boolean # true or false depending on given percent chance
+  - json2array(json): Array # converts json into an array
+  - sumArrays(array1, array2): Array # adds elements of two integer arrays together
+  - uid: Str # generates a random UID
+
+---
+gameManager.js
+# export gameManager object (as `gameManager`)
+  - gameManager.roomManager: # room manager object
+  - gameManager__init__(): # runs server ticks, emits board
+
+---
+roomManager.js
+# exports roomManager object (as `manager`)
+  - manager.rooms: # hash map of room objects
+  - manager.snakes: # every snake inside every room
+  - manager.ticking: # true if rooms exist in the manager, false otherwise
+  - manager.addSnake(snake): # adds a snake to the game
+  - manager.kill(snakeUID): # kills snake by UID;
+  - manager.getSnake(snakeUID): # retrieves snake object by UID
+  - manager.createRoom(room): # creates a room object, adds it to manager
+  - manager.getRoom(roomUID): # retrieves room based on UID
+  - manager.resetRoom(roomUID): # resets a room based on UID
+  - manager.online(): # returns how many snakes are online in the manager
+  - deleteRoom(id): # deletes a room by an ID
+
+---
+room.js
+# exports room class (as `Room`)
+  Room(uid,size,friendlyName)
+  # NOTE: UID MUST BE WITHOUT "ROOM" TAG- it will be appended automatically
+  - Room.name: # friendly name for room
+  - Room.uid: # uid for room ("ROOM-${uid}")
+  - Room.size: # size of room
+  - Room.snakes: # array of all snakes in room
+  - Room.walls: # array of all walls in room
+  - Room.apple: # [x,y] coords of apple
+  - Room.winCondition: # how many apples a snake needs to eat for the game to be considered won
+  - Room.needsToBeDeleted: # true if the manager needs to delete the room
+  - Room.lastTouched: # timer to help delete a room if no player has played in the room
+  - Room.tick(): # ticks room
+  - Room.killSnake(uid): # kills snake by UID
+  - Room.reset(): # resets room
+  - Room.addSnake(snake): # adds snake to room
+  - Room.newApplePos(): # moves apple to different location
+  - Room.getApplePos(): # returns Room.apple
+  - Room.dump(): # returns all data crucial to displaying room on client side
+  - Room.is_block_occupied(target[x,y]): # checks if specified target is occupied by apple, snake, or wall
+  - Room.scale2board(number): # constrains a number to the size of the board (if the number is bigger then size of smaller than 0, it caps at size and 0, respectively)
+  - Room.optimalNextSpawn(): # returns a direction, point, and gradient map
+  - Room.generateMatrix(): # generates a matrix representing the room-> ones represent occupied spots (Dont use to check if spot is occupied- this is very slow)
+  - Room.gradient(matrix,depth): # generates a gradient map of the room representing the danger spots. The higher the danger, the closer the value is to one, the lower the danger, the lower the number. Depth is how far away from a high danger zone is considered safe to be 0 danger. 
+---
+snake.js
+# exports snake class (as `Snake`)
+  Snake(uid,name,color,room,spawn,isBot-optional)
+  - Snake.uid: # uid for snake ("SNAKE-${uid}")
+  - Snake.name: # friendly name for snake
+  - Snake.body: # array of body parts, which are a set of coordinates
+  - Snake.direction: # one of up, down, left, right
+  - Snake.directionMap: # converts direction to an array that we can just add to the head of the snake to get a new position
+  - Snake.score: (Depracted - use Snake.length) # the snake's score
+  - Snake.speed: (Not in use right now) # the speed of the snake
+  - Snake.eating: # is the snake chomping on an apple rn or no?
+  - Snake.color: # color of the snake (means nothing as of version 2.0)
+  - Snake.bot: # true of the snake is a bot, false otherwise
+  - Snake.getRoom(): # returns the room object that the snake is in
+  - Snake.kill(): # kills the snake
+  - Snake.changeDirection(direction): changes the direction of the snake
+  - Snake.move(): # moves the snake in the respective direciton of travel, denoted by Snake.direction
+  - Snake.checkAction(): # does the snake need to eat an apple, die, or run outside of the game boundaries?
+
+---
+wall.js
+# exports class wall (as `Wall`)
+  Wall(x,y)
+  - Wall.position: # [x,y]
+
+---
+app.js
+# runs server, exports server reference and app reference
+
+---
+eventListener.js
+  - emitDeath(roomUID,snakeUID): # emits the death of a snake
+  - emitBoard(room): # emits the board to those who care
+
+---
+events.js
+# handles new connections/any other fancy things such as people sending messages once I make a chat
+# exports IO but dont use that reference, import webs.js instead
+
+---
+webs.js
+# creates IO stream, import io reference from here
