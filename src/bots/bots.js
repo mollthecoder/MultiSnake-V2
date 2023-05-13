@@ -6,7 +6,7 @@ class Bot extends Snake{
     super(uid,generateName(),pickColor(), room,
               [Math.floor(Math.random() * (manager.getRoom(room).size*0.75)),Math.floor(Math.random() * (manager.getRoom(room).size*0.75))]
          );
-    this.minMistakesPerTickPercent = 0.9;
+    this.minMistakesPerTickPercent = 0.8;
     this.type = type;
     //this.pref01 = Math.round(Math.random());
     this.oddsOfMistakePerTick = 1 - ((Math.random() * (1-this.minMistakesPerTickPercent))+this.minMistakesPerTickPercent);
