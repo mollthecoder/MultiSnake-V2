@@ -30,7 +30,7 @@ nunjucks.configure(resolve("./src/server/views"), {
 });
 app.use(
   session({
-    secret: process.env.KEY || "123456-asdfg",
+    secret: process.env.KEY,
     resave: false,
     saveUninitialized: true
   })
