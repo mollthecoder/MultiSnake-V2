@@ -1,10 +1,6 @@
-const { Database } = require("@sojs_coder/sodb");
 const AWS = require("aws-sdk");
 const { uid } = require("../etc/helpers.js");
-const API_KEYS = new Database("api-keys",{
-  encrypt: true,
-  timeToCompress: 48
-});
+
 AWS.config.update({
   region: "us-west-2",
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
