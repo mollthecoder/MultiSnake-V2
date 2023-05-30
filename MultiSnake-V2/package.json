@@ -6,12 +6,13 @@
   "main": "src/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": ". ./env && node src/index.js"
+    "start": ". ../.env && node src/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@mapbox/node-pre-gyp": "^1.0.10",
     "@sojs_coder/sodb": "^1.5.9",
     "@tensorflow/tfjs-node": "^4.5.0",
     "aws-sdk": "^2.1381.0",
