@@ -1,0 +1,68 @@
+{% extends "temp.njk" %}
+
+{% block head %}
+<title>MultiSnake | Play</title>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://www.google.com/recaptcha/api.js?render=6LcMwRomAAAAAHP9L7Ou4_54whFRZF5hdy5gItM9"></script>
+
+<script>
+  var decodeEntities = (function() {
+  // this prevents any overhead from creating the object each time
+  var element = document.createElement('div');
+
+  function decodeHTMLEntities (str) {
+    if(str && typeof str === 'string') {
+      // strip script/html tags
+      str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+      str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+      element.innerHTML = str;
+      str = element.textContent;
+      element.textContent = '';
+    }
+
+    return str;
+  }
+
+  return decodeHTMLEntities;
+})();
+  window.socket = io();
+  window.room = "{{ room }}";
+  window.type = "{{ type }}";
+  window.room = window.type+'-'+window.room;
+  var decodedUser = decodeEntities("{{ user | dump }}") || "{}";
+  window.user = JSON.parse(decodedUser);
+</script>
+<link rel = "stylesheet" href = "/css/game.css" type = "text/css">
+{% endblock %}
+{% block main %}
+<div class="container">
+  <div class="left">
+    <div class="leaderboard">
+      <h1>Leaderboard <div class = "player"><span id = "apples">0</span> 🍎</div></h1>
+      <ul id = "leaders">
+
+      </ul>
+    </div>
+    <div class="chat">
+      <div class="chat_messages">
+        <div class = "message_list">
+          
+        </div>
+      </div>
+      <div class="chat_input">
+        <input type="text" placeholder="Enter to focus chat" id = "chatinput">
+        <button id = "sendchat">Send</button>
+      </div>
+    </div>
+
+  </div>
+  <div class="game">
+    <canvas width = "500" height = "500"></canvas>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<script src = "/js/play.js" defer></script>
+
+{% endblock %}

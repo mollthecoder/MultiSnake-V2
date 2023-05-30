@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <meta charset="UTF-8">
+  <link rel = "canonical" href = "https://multisnake.xyz">
+   <link rel = "icon" href= "multisnake-favicon.png">
+    <script src="https://kit.fontawesome.com/ec5f6502ae.js" crossorigin="anonymous"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name = "description" content = "MultiSnake is an MMS-Massively Multiplayer snake! Chat with other players, don't run into walls, and play in many different game modes!">
+  <link href = "/css/home.css" rel = "stylesheet">
+  <meta name="keywords" content = "multiplayer, snake, multiplayer snake, multisnake, sojs">
+  {% block head %}
+  <title>MultiSnake - Multiplayer Snake!</title>
+  {% endblock %}
+  <!--
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DBKFRBYTHY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'G-DBKFRBYTHY');
+  </script>-->
+</head>
+<body>
+  <header>
+    <nav>
+      <div class = "nav-left">
+        <a href = "/">Home</a>
+        <a href = "/play/classic_0">Play Now</a>
+        <a href = "//discord.gg/Np7vBvEtp2">Discord</a>
+      </div>
+      <div class = "nav-right">
+      {% if user %}
+      <a href = "/account">Profile</a>
+      <a href = "/logout">Logout</a>
+      {% else %}
+      <a href = "/login">Login</a>
+      <a href = "/signup">Signup</a>
+      {% endif %}
+      </div>
+    </nav>
+  </header>
+  {% block main %}
+  <main>
+    <h1>Add Some content</h1>
+  </main>
+  {% endblock %}
+  {% block footer %}
+  <footer>
+    <h3>Add some content</h3>
+  </footer>
+  {% endblock %}
+  <div id = "notif-box"></div>
+  <script src = "/js/helpers.js"></script>
+</body>

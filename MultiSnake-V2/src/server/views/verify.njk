@@ -1,0 +1,59 @@
+{% extends "temp.njk" %}
+
+{% extends "temp.njk" %}
+{% block head %}
+<title>Verify Email | MultiSnake V2</title>
+<style>
+    .form {
+        padding: 2rem;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        max-width: 400px;
+        align-self: center;
+    }
+    .form .form-control:focus {
+        border: 1px solid rgba(255,255,255,0.2) !important;
+        border-bottom: 1px solid white !important;
+        outline:none;
+    }
+    .form .form-control {
+    display: block;
+    height: 50px;
+    margin-right: 0.5rem;
+    text-align: center;
+    font-size: 1.25rem;
+    min-width: 0;
+    background-color: rgba(0,0,0,0);
+    color: white;
+    border-bottom: 1px solid white;
+    outline:none;
+    }
+
+    .form .form-control:last-child {
+        margin-right: 0;
+    }
+</style>
+{% endblock %}
+{% block main %}
+<main class = "center">
+    <header><h1>Hello {{ user.username }}, verify your account</h1></header>
+    <p>An email containing a verification code has been sent to <b>{{ user.email }}</b>, check your inbox and spam folders</p>
+    <div class = "form">
+        <h4 class="text-center mb-4">Enter your code</h4>
+        <div class="d-flex mb-3">
+          <input type="tel" maxlength="1" pattern="[0-9]" class="form-control" autofocus>
+          <input type="tel" maxlength="1" pattern="[0-9]" class="form-control">
+          <input type="tel" maxlength="1" pattern="[0-9]" class="form-control">
+          <input type="tel" maxlength="1" pattern="[0-9]" class="form-control">
+          <input type="tel" maxlength="1" pattern="[0-9]" class="form-control">
+          <input type="tel" maxlength="1" pattern="[0-9]" class="form-control">
+        </div>
+        <button type="submit" class = "wide" id = "verify-button">Verify account</button>
+    </div>
+</main>
+{% endblock %}
+{% block footer %}
+<footer >&copy 2021-<script>document.write(new Date().getFullYear())</script> <a href= "https://45.33.54.245:3000">SoJS</a> | <a href = "https://socialrumbles.com/c/MultiSnake/">Social Rumbles</a> | <a href= "https://replit.com/@sojs">Repl.it</a> | <a href = "//discord.gg/Np7vBvEtp2">Discord</a> | <a href = "https://github.com/sojs-coder/Multisnake">Github</a></footer>
+
+<script src = "/js/verify.js"></script>
+{% endblock %}

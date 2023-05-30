@@ -2,9 +2,11 @@
   index.js:
   -bots
     bots.js:
+    botAPI.js: 
   - etc
     helpers.js:
   - managers
+    databaseManager.js:
     gameManager.js:
     rooManager.js:
     internals.js:
@@ -32,13 +34,23 @@ helpers.js
   - oddsOf(float0-100): Boolean # true or false depending on given percent chance
   - json2array(json): Array # converts json into an array
   - sumArrays(array1, array2): Array # adds elements of two integer arrays together
-  - uid: Str # generates a random UID
-
+  - uid(): Str # generates a random UID
+  - pickColor(): Str # generates a random color
+  - manhattanDistance(point1,point2): Float # calculates the distance between two points\ 
+  - directionVector(direction: Str): Array # returns a vector given up, down, left, or right
+  - generateAPIKey(): Str # generates a 32 character long API key
+  - rand(digits): Integer # returns random number X digits long
 ---
 gameManager.js
 # export gameManager object (as `gameManager`)
   - gameManager.roomManager: # room manager object
-  - gameManager__init__(): # runs server ticks, emits board
+  - gameManager.tick: # tick speed in milliseconds
+  - gameManager.__init__(): # runs server ticks, emits board
+  - mapData(roomObject): # maps the rooms contents to a matrix
+      # enemy snakes are marked by 1
+      # player snake marked as 0.5
+      # walls marked as 0.25
+      # apple marked as 0.75
 
 ---
 roomManager.js
@@ -53,18 +65,20 @@ roomManager.js
   - manager.getRoom(roomUID): # retrieves room based on UID
   - manager.resetRoom(roomUID): # resets a room based on UID
   - manager.online(): # returns how many snakes are online in the manager
-  - deleteRoom(id): # deletes a room by an ID
+  - manager.deleteRoom(id): # deletes a room by an ID
 
 ---
 room.js
 # exports room class (as `Room`)
-  Room(uid,size,friendlyName)
+  Room(uid,size,friendlyName,winCondition)
   # NOTE: UID MUST BE WITHOUT "ROOM" TAG- it will be appended automatically
   - Room.name: # friendly name for room
   - Room.uid: # uid for room ("ROOM-${uid}")
   - Room.size: # size of room
   - Room.snakes: # array of all snakes in room
+  - Room.creationTime: # creation time of the room
   - Room.walls: # array of all walls in room
+  - Room.winAnnounced: # is there a player that has won the game, and has that win been emitted to the server
   - Room.apple: # [x,y] coords of apple
   - Room.winCondition: # how many apples a snake needs to eat for the game to be considered won
   - Room.needsToBeDeleted: # true if the manager needs to delete the room
@@ -81,12 +95,23 @@ room.js
   - Room.optimalNextSpawn(): # returns a direction, point, and gradient map
   - Room.generateMatrix(): # generates a matrix representing the room-> ones represent occupied spots (Dont use to check if spot is occupied- this is very slow)
   - Room.gradient(matrix,depth): # generates a gradient map of the room representing the danger spots. The higher the danger, the closer the value is to one, the lower the danger, the lower the number. Depth is how far away from a high danger zone is considered safe to be 0 danger. 
+  Standard(uid,size,friendlyName)
+  # super (uid,size,friendlyName,10)
+  - Standard.spawnWall(): # spawns a wall in the room
+  - Standard.eatenUntilNextWall: # haw many apples unitl a wall spawns
+  - Standard.baseEatenUntilNextWall: # what Standard.eatenUntilNextWall resets to after it reaches 0
+  Small(uid, friendName)
+  # super(uid,7,name,5)
+
 ---
 snake.js
 # exports snake class (as `Snake`)
   Snake(uid,name,color,room,spawn,isBot-optional)
   - Snake.uid: # uid for snake ("SNAKE-${uid}")
   - Snake.name: # friendly name for snake
+  - Snake.loggedIn: # wether or not to update the database on win and creation
+  - Snake.color: # color of the snake (not implemented)
+  - Snake.creationTime: # creation time of the snake
   - Snake.body: # array of body parts, which are a set of coordinates
   - Snake.direction: # one of up, down, left, right
   - Snake.directionMap: # converts direction to an array that we can just add to the head of the snake to get a new position
@@ -97,7 +122,7 @@ snake.js
   - Snake.bot: # true of the snake is a bot, false otherwise
   - Snake.getRoom(): # returns the room object that the snake is in
   - Snake.kill(): # kills the snake
-  - Snake.changeDirection(direction): changes the direction of the snake
+  - Snake.changeDirection(direction): # changes the direction of the snake
   - Snake.move(): # moves the snake in the respective direciton of travel, denoted by Snake.direction
   - Snake.checkAction(): # does the snake need to eat an apple, die, or run outside of the game boundaries?
 
@@ -115,7 +140,7 @@ app.js
 eventListener.js
   - emitDeath(roomUID,snakeUID): # emits the death of a snake
   - emitBoard(room): # emits the board to those who care
-
+  - emitWin(roomID,snakeID): # emits the win of a snkae
 ---
 events.js
 # handles new connections/any other fancy things such as people sending messages once I make a chat
@@ -124,3 +149,13 @@ events.js
 ---
 webs.js
 # creates IO stream, import io reference from here
+
+---
+error codes
+# 1xx codes- API key related
+- 100: player already exists with that API key
+- 101: API key expired
+- 102: API key does not exist
+
+# 2xx codes- Socket.io related\
+- 200: Bad words failed to clean

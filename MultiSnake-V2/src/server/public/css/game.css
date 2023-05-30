@@ -1,0 +1,142 @@
+.container {  display: grid;
+  grid-template-columns: 0.7fr 1.3fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "left game";
+}
+
+.left {  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "leaderboard"
+    "chat";
+  grid-area: left;
+}
+
+.leaderboard { grid-area: leaderboard; }
+
+.chat {  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1.6fr 0.4fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "chat_messages"
+    "chat_input";
+  grid-area: chat;
+}
+
+.chat_messages { grid-area: chat_messages; }
+
+.chat_input { grid-area: chat_input; }
+
+.game { grid-area: game; }
+
+
+.message {
+  background-color: black;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.chat_input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background-color: #111;
+  color: white;
+}
+input[type="text"]:focus{
+  outline:none;
+  border-bottom: 1px solid #ff9f1c
+}
+
+button {
+  background-color: #ff9f1c;
+  color: black;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,0);
+  border-radius:6px;
+  transition: 500ms;
+}
+
+button:focus{
+  outline: none;
+  transition: 500ms;
+  color: #ff9f1c;
+  background-color: #111;
+  border: 1px solid #ff9f1c;
+  
+}
+button:hover{
+  transition: 500ms;
+  color: #ff9f1c;
+  background-color: #111;
+  border: 1px solid #ff9f1c;
+}
+.container,body {
+  background-color: #000;
+}
+
+.left {
+  background-color: #111;
+  border-radius: 6px;
+  margin: 12px;
+  box-sizing: unset;
+  padding: 12px;
+}
+
+.leaderboard {
+  color: white;
+  padding: 12px;
+}
+
+
+.game {
+  background-color: #000;
+  text-align: center;
+}
+
+canvas{
+  border: 1px solid white;
+  margin: 12px;
+}
+.message_list {
+    height: 225px;
+    overflow: scroll;
+}
+ul{
+  list-style: none;
+  height: 200px;
+  overflow: scroll;
+}
+li{
+  padding: 2px;
+}
+li.player{
+  color: #2424ff;
+  font-weight: bold;
+}
+div.player{
+  border: 1px solid gold;
+  font-size: inherit;
+  padding: 10px;
+  vertical-align: center;
+  display: inline-block;
+  border-radius: 12px;
+}
