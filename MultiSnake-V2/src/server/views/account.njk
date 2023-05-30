@@ -1,0 +1,43 @@
+{% extends "temp.njk" %}
+{% block head %}
+<script>window.userUid = "{{ user.uid }}"</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<title>Account | MultiSnake V2</title>
+<style>
+/* Custom styles for the account details */
+.account-details {
+      padding: 12px;
+      margin: auto;
+      width: 50%;
+    }
+</style>
+{% endblock %}
+{% block main %}
+<header>
+
+</header>
+
+<main class="center top-20">
+    <h1 class="heading">{{ user.email }}'s Account</h1>
+    <div class="account-details">
+        <p><strong>Username:</strong> <span id = "username">{{user.username}}</span></p>
+        <p><strong>Email:</strong> <span id = "email">{{user.email}}</span></p>
+        <p><strong>Games Played:</strong> <span id = "gamesPlayed">{{user.gamesPlayed}}</span></p>
+        <p><strong>Games Won:</strong> <span id = "gamesWon">{{user.gamesWon}}</span></p>
+        <p><strong>Win/Loss Ration:</strong> <span id = "winLossRatio">{{user.gamesWon/user.gamesPlayed}}</span></p>
+        <div class = "form button-row3">
+          <button id="updateUsernameBtn">Update Username</button>
+          <button id="updatePasswordBtn">Update Password</button>
+          <button id="deleteAccountBtn">Delete Account</button>
+        </div>
+    </div>
+
+</main>
+{% endblock %}
+{% block footer %}
+<script src = "/js/account.js"></script>
+<footer >&copy 2021-<script>document.write(new Date().getFullYear())</script> <a href= "https://45.33.54.245:3000">SoJS</a> | <a href = "https://socialrumbles.com/c/MultiSnake/">Social Rumbles</a> | <a href= "https://replit.com/@sojs">Repl.it</a> | <a href = "//discord.gg/Np7vBvEtp2">Discord</a> | <a href = "https://github.com/sojs-coder/Multisnake">Github</a></footer>
+
+
+
+{% endblock %}

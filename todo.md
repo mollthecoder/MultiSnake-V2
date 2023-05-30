@@ -1,7 +1,16 @@
-[ ] auth system
-[ ] add small mod (coming out on monday- hopefully!!!)
-[ ] create stats page for users to track their games, etc
-[ ] skins!
-[ ] custum skins?
-[ ] in game currency?
-[ ] add ads
+- [X] auth system
+    - [X] sync to AWS DB
+    - [X] account creation, deletion, etc
+    - [X] view profile (shows stats of a user)
+- [X] add small mod (coming out on monday- hopefully!!!)
+- [ ] create stats page for users to track their games, etc
+- [ ] skins!
+- [ ] custum skins?
+- [ ] in game currency?
+- [ ] add ads
+- [X] prevent hacking
+    - [X] POST to /verify-recaptcha
+    - [X] response contains API key
+    - [X] API key set to expire in 1 minute, added to database without corresponding uid (set to null)
+    - [X] on change direction check for matching UID and API keys (or check if key has expired)
+    - [X] on join request, assign API key to UID (sent from client) update expiration date to 1 hour from then
