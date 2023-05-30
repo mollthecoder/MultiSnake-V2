@@ -375,11 +375,11 @@ class Small extends Room {
 }
 module.exports = {
 	Room: Standard,
-	Classic: Room,
+	Classic,
 	Small,
 	hashMap: {
 		"standard":Standard,
 		"small":Small,
-		"classic":Room
+		"classic":Classic
 	}
 }
