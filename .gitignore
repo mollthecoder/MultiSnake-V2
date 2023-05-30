@@ -1,6 +1,3 @@
 node_modules
 *.db
 api_keys.*
-.replit
-replit.nix
-.breakpoints
