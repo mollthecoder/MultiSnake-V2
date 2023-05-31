@@ -10,8 +10,7 @@
     <div class = "form" action = "/play" id = "form">
       <input type = "text" id = "username" name = "username" placeholder="Bob Joe" autofocus>
       <button type = "button" id = "join">Join</button>
-      <p style = 'color: #aaa'><b>New!</b> VERSION 2 MASSIVE UPDATE <a href = "#2.0">Read the full changelog</a></i></p>
-     <p style = 'color: #aaa'>Multisnake is currently under active development... expect restarts and random crashes</p> 
+      <p style = 'color: #aaa'><b>New!</b> VERSION 2.1 UPDATE <a href = "#2.1.0">Read the full changelog</a></i></p>
       <div id = "room-box">
         <div id = "rooms-plain"></div>
         <div id = "rooms-mods"></div>
@@ -26,47 +25,8 @@
 </main>
  <main class="below">
   <div class = "content">
-  <h3 id = "welcome_to_multisnake">Welcome to MultiSnake</h3>
-  <h4>What is MultiSnake?</h4>
-  <p>MultiSnake is an incredibly easy to play multiplayer snake game. Programmed in node.js, HTML, CSS, and Javascript with Replit, you can join different rooms and play different mods. Use WASD or the arrow keys to move around the map, and the space bar to use your boost</p>
-  <p><strong>MultiSnake is the worlds first multiplayer snake</strong>. MultiSnake is not a knock-off like slither.io, or powerline.io, but it is <strong>truly, at it's core, a snake game.</strong> There is only ever one apple on the map, and players have to race to get to it. Of course, classic snake is not enough, so we added a couple twists:
-  </p>
-    <p><ul>
-      <li>Different Game Mods including small map, fog, tag, redlight, and classic</li>
-      <li>Blocks that spawn to block you</li>
-      <li>Fun automatically generated usernames like "PinkDuck45" (but don't worry, you can still choose custom ones)</li>
-    </ul></p>
-    <p>Because MultiSnake is a multiplayer game, there are a lot of strategies that one can use. Here are a couple good ones that will never fail you, and a couple advanced ones for the serious gamer. Here are some good general guidelines:
-      <ul>
-        <li><p><b>Twisting:</b> we all know that sometimes it is impossible to get the apple. There will be times where 3 snakes will all run at it and they will all die. To take advantage of that, navigate to a clear spot on the map and coil you body around and around until their is an opening for you to jump in an take the apple. Then go back to twisting and wait some more.</p></li>
-        <li><p><b>Kamikaze:</b> sometimes it's just so hopeless. You keep dying over and over. A snake is at 8 apples and about to win. Here is what you do. It is all about timing. Get one apple to boost with and get right in front of the other snakes path. Don't mind your own life. Your only goal here is to beat the other snake. Boost at just the right moment and he'll never know what hit him</p></li>
-        <li><p><b>Phasing:</b> this technique needs a lot of practice to master. Spawn some apples by eating 5 or so apples. This trick is also about timing, and is mostly instinctive. Get to  square right next to a block and smash  boost button (space bar). If you timed it right, you'll "phase" through the block. In a real game, you can use this to escape other snakes trying to kill you, and blocks will no longer be a problem.</p></li>
-      </ul>
-    </p>
-    <h4>How to play different game modes</h4>
-    <p><ul><li>
-      <b>Public-</b> All the public rooms have the same rules as normal snake. You can not go backwards onto yourself. Blocks will spawn every 5 apples eaten, and you can not run into them, other snakes, the walls, or yourself
-      </li>
-      <li><b>Small-</b> the same rules as the public rooms, but you no blocks spawn and the map is a lot smaller</li>
-      <li><b>Fog- </b> same rules as public, but blocks do not spawn, and fog does. You can not see other players in the fog.</li>
-      <li><b>Redlight- </b> original idea was by <a href ="https://replit.com/@rickysong">@rickyson</a>, and he said to do something from squidgame. Luckily, the game redlight greenlight is in the public domain, so I can use it. Hold the spacebar to freeze your snake when the light becomes red. It will turn yellow first, though, so you have time to react. Get to ten apples to win. If you are not frozen when the light turns red, you die!</li>
-      <li><b>Tag-</b> Eat an apple to become "it" and turn yellow! Tag other people to kill them! Walls will not spawn. Get to ten apples to win!</li></ul></p>
-    <h4>Game Credits</h4>
-    <p>Thanks to <a href = "https://replit.com/@Coder100">@Coder100</a> for helping with bugs back in beta. Thank you to <a href = "https://replit.com/@PYer">@PYer</a> for coming up with ideas for mods. Thank you to <a href = "https://replit.com/@ch1ck3n">@ch1ck3n</a> for helping with speed of the game. Thank you to <a href = "https://replit.com/@rickysong">@rickysong</a> and <a href = "https://socialrumbles.com/@Dheirya_Tyagi_CEO">@Redman</a> for helping with testing. Lastly, thank you to the entire discord community for the support and helping to find bugs!</p>
-    <h2>Why was MultiSnake made?</h2>
-    <p><i>A message from the creator</i></p>
-    <p>I have been programming computers for 5 years, as of writing this. It was really a challenge for me, as I wanted to create a game without using HTML canvas or any game engines. (The real reason for this is because I wanted to not have to figure out a whole new thing). I had my javascript methods, my logic, and the skill that comes with 5 years of coding. This originally started off as a <a href = "https://impossible-snake.45.33.54.245:3000">single player snake game</a>, where you run around and avoid monsters that try and eat you.</p>
-    <p>I had already made a chatroom, and I thought "what if I put into practice what I learned from that project, and use it to make a multiplayer game?". So I did. After hours of reading tutorials later, I had a nice stream of data set up. My client could communicate with the server, the server could respond. I did not have to mess around to much initially with the front end, as I copied and pasted the game set up from that first snake game.</p>
-    <p>A thousand lines of code later, I had a horribly styled homepage, and a fully working multiplayer game framework. Player picked their usernames and the room that they wanted to join, and they were in. They could play around, and that was it.</p>
-    <p>There was one problem. The game was slow. I spent long hours trying to figure out how to fix it, and then it came upon me. In the code, I had a function that was called every 100ms. That's 10 times a second. Not very fast, but coupled with the fact that I was looping through an array of 10K per room in every function called, and this with the fact that I had 4 logic functions, I was looping through ~40K times every 100ms. That is a lot to be done in 100ms. And not only that, but I then had to send it over to the client, another 10 or so milliseconds gone. I was lagging hard. As <a href = "https://replit.com/@Wheysted">@Wheysted</a> put it, <blockquote>If this were COD, I would be lag ragging all day!</blockquote></p>
-    <p>I set to work. I consolidated all the loops into one and changed the game logic so the functions were called only 10K times a room. Still not good. I changed up the logic on when the snake dies. What I was doing was just changing the value of the snake to <code>"dead_snake"</code>. But this did not work well. Soon my code was polluted with <code>"dead_snake"</code>s all over the place. Not good. I then totally turned the game upside down and changed it to deleting the snake when it dies. This was a lot harder than you might think, but I managed. There. Now it only loops ~5 times per room. A lot better.</p>
-    <p>A while later, I had the first mod, and the stylesheet was greatly improved. The mod was called "small", and I was very impressed at what I could do. So, I set to work. Because of the way I built it, it was super easy to just add a couple lines of code and change up the logic to create new mods. So I spit them out. I was pulling mods out of my pockets left and right, one every week. But then.</p>
-    <p>I went of repl.it trending</p>
-    <p>:sad_face:</p>
-    <p>But that didn't stop me. I kept going. I spit out the redlight greenlight mod. And that's when I realized that every time I added a new mod, my game lost speed. I stopped. I thought. I thought some more.</p>
-    <h3>Where we are now</h3>
-    <p>I am currently rewriting all ~3K lines of multisnake code to make it more efficient, readable, and less time-consuming. Oh, and Im adding ads.</p>
-    <p>:evil_smiley_face:</p>
+  <h3 id = "welcome_to_multisnake">Welcome to MultiSnake V2</h3>
+
     <h2>Changelog</h2>
     <div class = "changelog">
       <div class = "log" id = "1.0.0">
@@ -242,6 +202,49 @@
           <p>Updated the bots! If I do say so myself, they are almost impossible to detect from the players (except when they all move in sync)</p>
           <p>Added intelligent spawning. This one is crazy. I generate a gradient map of all the danger spots on the map, then use this to determine the least dangerous spawn zone and the least dangerous spawn direction.</p>
           <p>Have fun!</p>
+        </div>
+      </div>
+      <div class = "log" id = "2.1.0">
+        <div class = "log-title">
+            <div class = "log-version-number">2.1.0</div>
+            <div class = "log-tags">[UPDATE][signup][mods][nginx]</div>
+            <div class = "log-time">5.31.22</div>
+        </div>
+        <div class = "log-des">
+            <h2 id="updated-to-v2-1-0">Updated to V2.1.0</h2>
+            <h3 id="changes">Changes</h3>
+            <h4 id="added-classic-map">Added classic map</h4>
+            <ul>
+                <li>No walls spawn, get 10 apples to win</li>
+            </ul>
+            <h4 id="added-small-map">Added Small Map</h4>
+            <ul>
+                <li>This was easy as I just had to change the &quot;size&quot; parameter</li>
+                <li>Added some query strings so that you could change room type</li>
+                <li>Updated to way the board was drawn to display different map sizes</li>
+            </ul>
+            <h4 id="added-login-signup-system">Added Login/Signup system</h4>
+            <ul>
+                <li>connect to AWS dynamoDB to create account</li>
+                <li>Some express session to manage them</li>
+                <li>added the ability to click on logged in users from the leader board to view their stats</li>
+                <li>emails are private dont worry (I just need to validate them for chat- this is powerd by amazon SES)</li>
+            </ul>
+            <h4 id="added-fun-api-token-generation">Added fun API Token generation</h4>
+            <ul>
+                <li>This is to prevent bots from connecting and impersonating other player</li>
+                <li>Here how it works
+                    <ol>
+                        <li>A user connect, server sends request to reCaptcha</li>
+                        <li>If the user is judged to not be a bot, an API key is generated and sent back to the client</li>
+                        <li>The client then sends the API key along with their JOIN_REQUEST</li>
+                        <li>The server checks to see if the key is valid, then assigns it their snakes UID</li>
+                        <li>Whenever they change direction, they also send their API key, which is checked against their UID</li>
+                    </ol>
+                </li>
+            </ul>
+            <h3>More on bots</h3>
+            <p>Support for custom bots will be rolling out soon, once I write some tutorials on how to connect and make them, as well come up with a protocol for them to get API keys that dont expire (this is already in the code, I just have to figure out how to assign them to people on request)</p>
         </div>
       </div>
     </div>
