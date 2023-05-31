@@ -21,14 +21,12 @@ const server = http.createServer(app);
 
 
 
-app.use(morgan("dev"));
-app.use(express.json())
+app.use(express.json());
 app.use(express.static(resolve("./MultiSnake-V2/src/server/public")));
 nunjucks.configure(resolve("./MultiSnake-V2/src/server/views"), {
     autoescape: true,
     express: app
 });
-console.log(process.env.KEY)
 app.use(
   session({
     secret: process.env.KEY,
