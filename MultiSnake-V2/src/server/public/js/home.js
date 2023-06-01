@@ -3,7 +3,7 @@ window.largeAlert = (html)=>{
   document.getElementById('alert-box').style.display = "inline";
 }
 if(window.self !== window.top){
-  largeAlert('<h1>This site will preform a lot better <a href = "https://multisnake.45.33.54.245:3000/" target = "_blank">when opened in a new window</a>.</h1>')
+  largeAlert('<h1>This site will preform a lot better <a href = "https://multisnake.xyz/" target = "_blank">when opened in a new window</a>.</h1>')
 }
 document.getElementById("room-box").style.display = "none";
 window.roomopen = false;
