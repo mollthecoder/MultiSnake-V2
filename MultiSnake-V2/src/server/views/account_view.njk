@@ -29,7 +29,7 @@
         <p><strong>Username:</strong> <span id = "username">{{viewing.username}}</span></p>
         <p><strong>Games Played:</strong> <span id = "gamesPlayed">{{viewing.gamesPlayed}}</span></p>
         <p><strong>Games Won:</strong> <span id = "gamesWon">{{viewing.gamesWon}}</span></p>
-        <p><strong>Win/Loss Ration:</strong> <span id = "winLossRatio">{{viewing.gamesWon/viewing.gamesPlayed}}</span></p>
+        <p><strong>Win/Loss Ration:</strong> <span id = "winLossRatio">{{((viewing.gamesWon/viewing.gamesPlayed) * 100 ).toFixed(2)}}</span>% </p>
         {% if user %}
         <h3>How you compare</h3>
         <p>You have played {{ ((user.gamesPlayed/viewing.gamesPlayed)*100).toFixed(2) }}% as many games as {{ viewing.username }}</p>
