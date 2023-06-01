@@ -148,7 +148,6 @@ app.post('/signup', async (req, res) => {
 
     // Create user in the database
     var userCheck = await dbManager.getDataByEmail(email);
-    console.log(userCheck)
     if(userCheck.Items.length == 0){
       await dbManager.createUser(email, username, password, false, age)
       const user = await dbManager.getDataByEmail(email)
