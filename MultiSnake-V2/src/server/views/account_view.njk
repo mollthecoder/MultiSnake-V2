@@ -20,6 +20,12 @@
 <main class="center top-20">
     <h1 class="heading">{{ viewing.username }}'s Account</h1>
     <div class="account-details">
+        <p>User since 
+            <script>
+                var x = new Date({{ viewing.timestamp }}); 
+                document.write(x.getMonth()+"."+x.getDate(0)+"."+x.getFullYear());
+            </script>
+        </p>
         <p><strong>Username:</strong> <span id = "username">{{viewing.username}}</span></p>
         <p><strong>Games Played:</strong> <span id = "gamesPlayed">{{viewing.gamesPlayed}}</span></p>
         <p><strong>Games Won:</strong> <span id = "gamesWon">{{viewing.gamesWon}}</span></p>

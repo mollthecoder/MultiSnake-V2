@@ -230,7 +230,8 @@ class DBManager{
         fastestTimeToWin: Number.MAX_SAFE_INTEGER,
         passwordHash,
         verified,
-        yearBorn: age
+        yearBorn: age,
+        timestamp: new Date().getTime()
       }
     }
     try {
