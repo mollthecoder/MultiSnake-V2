@@ -22,8 +22,8 @@ const server = http.createServer(app);
 
 
 app.use(express.json());
-app.use(express.static(resolve("./MultiSnake-V2/src/server/public")));
-nunjucks.configure(resolve("./MultiSnake-V2/src/server/views"), {
+app.use(express.static(resolve("./src/server/public")));
+nunjucks.configure(resolve("./src/server/views"), {
     autoescape: true,
     express: app
 });
@@ -148,7 +148,8 @@ app.post('/signup', async (req, res) => {
 
     // Create user in the database
     var userCheck = await dbManager.getDataByEmail(email);
-    if(userCheck.Items.length > -1){
+    console.log(userCheck)
+    if(userCheck.Items.length == 0){
       await dbManager.createUser(email, username, password, false, age)
       const user = await dbManager.getDataByEmail(email)
       // Return success response
@@ -292,7 +293,7 @@ app.get('/api/v1/rooms', (req, res) => {
 
 
 
-server.listen(3001, () => {
+server.listen(3003, () => {
   console.log('Server Live');
 });
 module.exports = { server,app }
