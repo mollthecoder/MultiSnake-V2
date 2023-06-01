@@ -20,11 +20,17 @@
 <main class="center top-20">
     <h1 class="heading">{{ user.email }}'s Account</h1>
     <div class="account-details">
+        <p>User since 
+            <script>
+                var x = new Date({{ user.timestamp }}); 
+                document.write(x.getMonth()+"."+x.getDate(0)+"."+x.getFullYear());
+            </script>
+        </p>
         <p><strong>Username:</strong> <span id = "username">{{user.username}}</span></p>
         <p><strong>Email:</strong> <span id = "email">{{user.email}}</span></p>
         <p><strong>Games Played:</strong> <span id = "gamesPlayed">{{user.gamesPlayed}}</span></p>
         <p><strong>Games Won:</strong> <span id = "gamesWon">{{user.gamesWon}}</span></p>
-        <p><strong>Win/Loss Ration:</strong> <span id = "winLossRatio">{{user.gamesWon/user.gamesPlayed}}</span></p>
+        <p><strong>Win/Loss Ration:</strong> <span id = "winLossRatio">{{(user.gamesWon/user.gamesPlayed) * 100).toFixed(2)}}%</span></p>
         <div class = "form button-row3">
           <button id="updateUsernameBtn">Update Username</button>
           <button id="updatePasswordBtn">Update Password</button>

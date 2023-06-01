@@ -597,7 +597,7 @@ function sendChat(){
       room,
     });
   }else{
-    if(user){
+    if(user && (new Date().getFullYear() - user.yearBorn) < 13){
       document.getElementById("chatinput").value = "";
       displayNotif("You must be over 13 to chat")
     }else{

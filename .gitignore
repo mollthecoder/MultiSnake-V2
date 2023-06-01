@@ -3,6 +3,8 @@ node_modules
 api_keys.*
 node_modules/
 .env
+.bashrc
 env.bat
 SoDB
 ecosystem.config.js
+*.log
