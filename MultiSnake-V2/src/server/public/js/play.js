@@ -108,6 +108,11 @@ socket.on("optimal_spawn",(data)=>{
 });
 
 // NON GAME CRITICAL //
+window.addEventListener("keydown", function(e) {
+    if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
+        e.preventDefault();
+    }
+}, false);
 socket.on("error",handleError);
 
 function handleError(error){
