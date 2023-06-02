@@ -102,7 +102,6 @@ app.get('/login', (req, res) => {
 app.get("/developers",updateSession(), (req, res) => {
     res.render("developers.njk", {
         user: req.session.user,
-        api_keys: req.session.user.api_keys
     });
 });
 // GET method to render the account page
