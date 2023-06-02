@@ -1,0 +1,62 @@
+main {
+
+    height: 100vh;
+}
+
+body {
+    overflow: hidden;
+}
+
+.table-container {
+    height: 60%;
+    /* Set a fixed height for the table container */
+    overflow-y: auto;
+    /* Enable vertical scrolling for the container */
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.table-head {
+    position: sticky;
+    /* Make the table header sticky */
+    top: 0;
+    /* Position it at the top */
+    background-color: #222;
+    z-index: 1;
+    /* Ensure the header is on top of other elements */
+    
+    padding: 6px;
+    font-weight: bold;
+}
+th{
+    border-bottom: 1px solid white;
+}
+th,
+td {
+    padding: 6px
+}
+
+td {
+    border-bottom: 1px dotted white;
+}
+
+.table-row:hover {
+    background-color: #333;
+}
+
+.manage {
+    width: 100%;
+}
+
+.uid {
+    width: auto;
+    text-align: right;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    overflow: hidden;
+}

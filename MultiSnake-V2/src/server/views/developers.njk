@@ -1,0 +1,58 @@
+{% extends "temp.njk" %}
+{% block head %}
+<link href = "/css/developers.css" rel = "stylesheet">
+<title>Developers | MultiSnake</title>
+{% endblock %}
+
+{% block main %}
+{% if user %}
+{% set api_keys =  ["45ZeHLkHLskSbRuBvLObUGZ3lfDSJTVZ","8DAefL5BtSwVOUAp0d1ZYrEEr0sliGBU","9XZLnqBwARSMEFv4O4PBtcxY4Lpob3x2","BKce7wVSnblYEfWv2pAXHlbyrCuPpxmn","BrCv6cHP6uFaohS11GnWIllvzB3VoX4K","CJlyot3evxeR6fgW98sTBblKmrzKaRYy","CsCvTrJrdscXqYoLHnoRBlLwpReNKEJT","IYaitmquR42MafZlpd6clsY9e8NMCcmL","LU06037xiU71ZZJcfgXCauvlTuGybM6N","MZU0aVmyCMcsc2qaVsk9OUXGBixy9zxQ","PapmjncSJYDcUtTaDuatgZwXyIwubiQ2","RH0GV1SqX1IUAL0Rx9MQrlaK3BrK61Mr","RJ3VkuYbp0Zxz2lwQdRGwyKmtpH1JyMY","RMUKYDi0lm0AmQIadaZRx3J6pNWlJ5k9","RvnLoV7vtgEBEhvsLDMVJKXFugcoXHoY","i9LtNKURTBV5R3JGZNnjWfhq0kJz8TgF","ju0ssxnrH3ZoBxhtKwtuFJuWpNAJzSo0","mWBWiIfdA6C3KRCMquGJC76u7WMTPPdE","nyhHKOqT2G2zX95I99MHXKzJLchYsqZb","o0seZ0nYXH021Cy5vTVtthaUqY9whwOp","x5Sj0pFYrK4CDoXAWIrZqhoCTUur3AXo"]  %}
+        <main class="main-center top-20">
+            <section class = "bubble-75">
+            
+            {% if user.verified %}
+            <div>
+                <h1 class="heading">Developer Dashboard</h1>
+                <p>Welcome to the developer dashboard</p>
+            </div>
+            <div class = "table-container">
+                <table>
+                    <thead class = "table-head">
+                        <tr>
+                            <th>ID</th>
+                            <th class = "uid">Uid</th>
+                            <th class = "manage">Manage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ user.api_keys | dump }}
+                        {% for uid in user.api_keys %}
+                            <tr class = "table-row" id="row-{{ loop.index0 }}">
+                                <td><b>{{ loop.index0 }}</b></td>
+                                <td class = "uid">{{ uid }}</td>
+                                <td class = "manage">
+                                    <button class = "btn btn-inline">Copy Key</button>
+                                    <button class = "btn btn-danger btn-inline">Delete</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <button class = "btn" id = "add">Add Another Key</button>
+            {% else %}
+                <h1 class="heading">Developer Dashboard</h1>
+                <p><a href = "/verifyEmail">Verify your email</a> to create bots<p>
+            {% endif %}
+            </section>
+        </main>
+{% else %}
+        <main class="main-center">
+            <h1 class="heading"><a href ="/login">Login</a> to access</h1>
+            <p>The developer dashboard</p>
+        </main>
+{% endif %}
+{% endblock %}
+{% block footer %}
+    <script src = "/js/developers.js"></script>
+{% endblock %}

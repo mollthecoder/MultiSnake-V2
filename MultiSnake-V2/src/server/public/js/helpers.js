@@ -138,7 +138,7 @@ highlightNav()
 function redirect(to){
     setTimeout(()=>{
         window.location.replace(to)
-    },1500);
+    },750);
 }
 function handleRes(response){
   if(response.redirect){

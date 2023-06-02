@@ -13,7 +13,7 @@ var moveFromIndex = Object.keys(moveMap);
 
 const modelJsonPath = path.resolve(__dirname, 'm/model.json');
 
-console.log(modelJsonPath);
+
 var model = false;
 
 async function loadModel() {
