@@ -38,7 +38,7 @@ function handleDeleteRow(rowNum){
             api_key: api_key
         })
         fetch("/deleteKey",{
-            method: "POST",
+            method: "DELETE",
             headers:{
                 'Content-Type':'application/json'
             },

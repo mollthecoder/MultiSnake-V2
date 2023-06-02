@@ -73,7 +73,8 @@ function mustBeLoggedIn(message) {
         }else{
             res.status(405).json({
                 message,
-                color: "red"
+                color: "red",
+                redirect: "/login"
             })
         }
     }
@@ -149,12 +150,12 @@ app.get('/logout', (req, res) => {
 
 });
 
-app.post("/deleteKey",mustBeLoggedIn("You must be logged in to delete an API key"),(req,res)=>{
-    if(req.session.user && req.session.user.email){
-
-    }else{
-
-    }
+app.delete("/deleteKey",mustBeLoggedIn("You must be logged in to delete an API key"),async (req,res)=>{
+    const { uid, api_key } = req.body;
+    await dbManager.removeAPIKey(uid,api_key);
+    res.status(200).json({
+        message:`${api_key} successfully deleted`
+    })
 })
 app.post("/verifyEmail", async (req, res) => {
     if (req.session.verificationCode && req.session.user) {
