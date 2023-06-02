@@ -22,7 +22,7 @@ function handleCopyRow(rowNum){
     button.innerHTML = "Copied!"
 
     setTimeout(()=>{
-        button.innerHTML = "Copy"
+        button.innerHTML = "Copy Key"
     },500)
 }
 function handleDeleteRow(rowNum){
