@@ -39,7 +39,7 @@ app.use(
     })
 );
 app.use(restrict(["/account","/developers"], "/login", true));
-app.use(restrict(["/login", "/signup", "verifyEmail"], "/account", false))
+app.use(restrict(["/login", "/signup", "/verifyEmail"], "/account", false))
 function restrict(urls, redirect, loggedInToAccess) {
     return (req, res, next) => {
         var path = req._parsedUrl.pathname;
@@ -131,10 +131,10 @@ app.get("/play/:room", (req, res) => {
     });
 });
 
-app.get("/verifyEmail", (req, res) => {
+app.get("/verifyEmail", async (req, res) => {
     if(req.session.user && req.session.user.email){
         req.session.verificationCode = rand(6);
-        dbManager.sendVerification(req.session.user.email, req.session.verificationCode);
+        await dbManager.sendVerification(req.session.user.email, req.session.verificationCode);
         res.render("verify.njk", {
             user: req.session.user
         });
@@ -154,8 +154,29 @@ app.delete("/deleteKey",mustBeLoggedIn("You must be logged in to delete an API k
     const { uid, api_key } = req.body;
     await dbManager.removeAPIKey(uid,api_key);
     res.status(200).json({
-        message:`${api_key} successfully deleted`
+        message:`${api_key} successfully deleted`,
+        color: "green"
     })
+})
+app.post("/newAPIKey",mustBeLoggedIn("You must be logged in to create an API key"),async (req,res)=>{
+    const { uid } = req.body;
+    console.log(uid)
+    var key = generateAPIKey();
+    console.log(key)
+    try{
+        await dbManager.addAPIKey(uid,key);
+        res.status(200).json({
+            key,
+            message: key + " successfully created",
+            color: "green"
+        });
+    }catch(err){
+        res.status(500).json({
+            message:err.message,
+            color: "red"
+        })
+    }
+
 })
 app.post("/verifyEmail", async (req, res) => {
     if (req.session.verificationCode && req.session.user) {
