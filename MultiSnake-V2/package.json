@@ -1,6 +1,6 @@
 {
   "name": "nodejs",
-  "version": "2.1.2",
+  "version": "2.1.4",
   "description": "",
   "source": "src/index.js",
   "main": "src/main.js",

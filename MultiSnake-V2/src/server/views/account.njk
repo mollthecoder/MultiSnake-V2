@@ -26,6 +26,9 @@
                 document.write(x.getMonth()+"."+x.getDate(0)+"."+x.getFullYear());
             </script>
         </p>
+        {% if not user.verified %}
+            <p>Please <a href = "/verifyEmail">verify</a> your email to be able to chat</p>
+        {% endif %}
         <p><strong>Username:</strong> <span id = "username">{{user.username}}</span></p>
         <p><strong>Email:</strong> <span id = "email">{{user.email}}</span></p>
         <p><strong>Games Played:</strong> <span id = "gamesPlayed">{{user.gamesPlayed}}</span></p>

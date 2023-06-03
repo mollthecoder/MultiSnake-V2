@@ -108,6 +108,13 @@ socket.on("optimal_spawn",(data)=>{
 });
 
 // NON GAME CRITICAL //
+window.addEventListener("keydown", function(e) {
+    var chatInput = document.getElementById("chatinput")
+    var isFocused = (document.activeElement === chatInput);
+    if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1 && !isFocused) {
+        e.preventDefault();
+    }
+}, false);
 socket.on("error",handleError);
 
 function handleError(error){
@@ -600,6 +607,8 @@ function sendChat(){
     if(user && (new Date().getFullYear() - user.yearBorn) < 13){
       document.getElementById("chatinput").value = "";
       displayNotif("You must be over 13 to chat")
+    }else if(!user.verified){
+        displayNotif('<a href = "/verifyEmail">Verify</a> your email to chat')
     }else{
       displayNotif("<a href = '/login'>Login</a> to chat")
     }
@@ -610,7 +619,9 @@ socket.on("chat",(data)=>{
   if(user && user.verified && ((new Date().getFullYear() - user.yearBorn) >= 13)){
     string = `<p class="message"><span class = "msender">${data.from}:</span> ${data.message}</p>`;
   }else{
-    if(user){
+    if(user && !user.verified){
+        string = `<p class="message"><span class = "msender">System:</span> Your email must be verified to chat</p>`;
+    }else if(user && (new Date().getFullYear() - user.yearBorn) < 13){
       string = `<p class="message"><span class = "msender">System:</span> You must be over 13 to chat</p>`;
     }else{
       string = `<p class="message"><span class = "msender">System:</span> <a href = "/login">Login</a> to chat</p>`;

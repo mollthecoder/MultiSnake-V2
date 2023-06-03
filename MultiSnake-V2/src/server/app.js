@@ -38,8 +38,9 @@ app.use(
         saveUninitialized: true
     })
 );
-app.use(restrict(["/account","/developers"], "/login", true));
-app.use(restrict(["/login", "/signup", "/verifyEmail"], "/account", false))
+
+app.use(restrict(["/account"], "/login", true));
+app.use(restrict(["/login", "/signup"], "/account", false))
 function restrict(urls, redirect, loggedInToAccess) {
     return (req, res, next) => {
         var path = req._parsedUrl.pathname;
@@ -65,6 +66,7 @@ function restrict(urls, redirect, loggedInToAccess) {
         }
     }
 }
+
 function mustBeLoggedIn(message) { 
     // equivalent of restrict() but for API endpoints
     return (req,res,next)=>{
@@ -93,6 +95,7 @@ function updateSession(log) {
         next();
     }
 }
+
 app.get("/", (req, res) => {
     res.render("index.njk");
 });
@@ -181,7 +184,6 @@ app.post("/newAPIKey",mustBeLoggedIn("You must be logged in to create an API key
 app.post("/verifyEmail", async (req, res) => {
     if (req.session.verificationCode && req.session.user) {
         const { code } = req.body;
-
         if (code == req.session.verificationCode) {
             await dbManager.setVerified(req.session.user.uid);
             res.status(200).json({ message: req.session.user.email + " successfully verified", color: "green", "redirect": "/account" })
