@@ -138,11 +138,16 @@ highlightNav()
 function redirect(to){
     setTimeout(()=>{
         window.location.replace(to)
-    },1500);
+    },750);
 }
 function handleRes(response){
   if(response.redirect){
     redirect(response.redirect);
   }
   displayNotif(response.message,response.color);
+}
+function removeListeners(element){
+    var new_element = element.cloneNode(true);
+    element.parentNode.replaceChild(new_element, element);
+    return new_element;
 }

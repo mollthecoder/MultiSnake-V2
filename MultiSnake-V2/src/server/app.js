@@ -20,13 +20,17 @@ const server = http.createServer(app);
 
 
 
-
 app.use(express.json());
-app.use(express.static(resolve("./MultiSnake-V2/src/server/public")));
-nunjucks.configure(resolve("./MultiSnake-V2/src/server/views"), {
+app.use(express.static(resolve("./src/server/public")));
+nunjucks.configure(resolve("./src/server/views"), {
     autoescape: true,
     express: app
 });
+// app.use(express.static(resolve("./MultiSnake-V2/src/server/public")));
+// nunjucks.configure(resolve("./MultiSnake-V2/src/server/views"), {
+//     autoescape: true,
+//     express: app
+// });
 app.use(
     session({
         secret: process.env.KEY,
@@ -34,6 +38,7 @@ app.use(
         saveUninitialized: true
     })
 );
+
 app.use(restrict(["/account"], "/login", true));
 app.use(restrict(["/login", "/signup"], "/account", false))
 function restrict(urls, redirect, loggedInToAccess) {
@@ -61,6 +66,21 @@ function restrict(urls, redirect, loggedInToAccess) {
         }
     }
 }
+
+function mustBeLoggedIn(message) { 
+    // equivalent of restrict() but for API endpoints
+    return (req,res,next)=>{
+        if(req.session.user && req.session.user.email){
+            next();
+        }else{
+            res.status(405).json({
+                message,
+                color: "red",
+                redirect: "/login"
+            })
+        }
+    }
+}
 function updateSession(log) {
     return async (req, res, next) => {
         if (req.session && req.session.user) {
@@ -71,14 +91,11 @@ function updateSession(log) {
             } else {
                 req.session.user = false;
             }
-            if (log) {
-                console.log("Use parameters updated");
-                console.log(req.session.user);
-            }
         }
         next();
     }
 }
+
 app.get("/", (req, res) => {
     res.render("index.njk");
 });
@@ -86,7 +103,11 @@ app.get("/", (req, res) => {
 app.get('/login', (req, res) => {
     res.render('login.njk');
 });
-
+app.get("/developers",updateSession(), (req, res) => {
+    res.render("developers.njk", {
+        user: req.session.user,
+    });
+});
 // GET method to render the account page
 app.get('/account', updateSession(), (req, res) => {
     res.render('account.njk', { user: req.session.user });
@@ -132,10 +153,37 @@ app.get('/logout', (req, res) => {
 
 });
 
+app.delete("/deleteKey",mustBeLoggedIn("You must be logged in to delete an API key"),async (req,res)=>{
+    const { uid, api_key } = req.body;
+    await dbManager.removeAPIKey(uid,api_key);
+    res.status(200).json({
+        message:`${api_key} successfully deleted`,
+        color: "green"
+    })
+})
+app.post("/newAPIKey",mustBeLoggedIn("You must be logged in to create an API key"),async (req,res)=>{
+    const { uid } = req.body;
+    console.log(uid)
+    var key = generateAPIKey();
+    console.log(key)
+    try{
+        await dbManager.addAPIKey(uid,key);
+        res.status(200).json({
+            key,
+            message: key + " successfully created",
+            color: "green"
+        });
+    }catch(err){
+        res.status(500).json({
+            message:err.message,
+            color: "red"
+        })
+    }
+
+})
 app.post("/verifyEmail", async (req, res) => {
     if (req.session.verificationCode && req.session.user) {
         const { code } = req.body;
-
         if (code == req.session.verificationCode) {
             await dbManager.setVerified(req.session.user.uid);
             res.status(200).json({ message: req.session.user.email + " successfully verified", color: "green", "redirect": "/account" })
@@ -171,7 +219,7 @@ app.post('/signup', async (req, res) => {
     }
 });
 // Update account endpoint
-app.put('/account', async (req, res) => {
+app.put('/account',mustBeLoggedIn("You must be logged in to modify your account"), async (req, res) => {
     const { uid, newUsername, newPassword } = req.body;
 
     try {
@@ -192,7 +240,7 @@ app.put('/account', async (req, res) => {
 });
 
 // Delete account endpoint
-app.delete('/account', async (req, res) => {
+app.delete('/account', mustBeLoggedIn("You must bel logged in to delete your account"),async (req, res) => {
     const { uid } = req.body;
 
     try {

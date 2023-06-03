@@ -175,7 +175,8 @@ class DBManager{
       "gamesWon":"Integer",
       "passwordHash":"string",
       "verified":"boolean",
-      "yearBorn":"Integer"
+      "yearBorn":"Integer",
+      "api_keys":"String[]"
     }
   }
   async winGame(uid, timeToWin) {
@@ -384,6 +385,52 @@ class DBManager{
     try {
       const data = await this.dynamoClient.get(params).promise();
       return data.Item;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  async addAPIKey(uid, apiKey) {
+    const params = {
+      TableName: this.TABLE_NAME,
+      Key: {
+        uid
+      },
+      UpdateExpression: "SET #ak = list_append(if_not_exists(#ak, :empty_list), :apiKey)",
+      ExpressionAttributeNames: {
+        "#ak": "api_keys"
+      },
+      ExpressionAttributeValues: {
+        ":empty_list": [],
+        ":apiKey": [apiKey]
+      }
+    };
+  
+    try {
+      const data = await this.dynamoClient.update(params).promise();
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  
+  async removeAPIKey(uid, apiKey) {
+    const params = {
+      TableName: this.TABLE_NAME,
+      Key: {
+        uid
+      },
+      UpdateExpression: "DELETE #ak :apiKey",
+      ExpressionAttributeNames: {
+        "#ak": "api_keys"
+      },
+      ExpressionAttributeValues: {
+        ":apiKey": this.dynamoClient.createSet([apiKey])
+      }
+    };
+  
+    try {
+      const data = await this.dynamoClient.update(params).promise();
+      return data;
     } catch (err) {
       console.log(err);
     }

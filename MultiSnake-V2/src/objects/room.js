@@ -34,7 +34,7 @@ class Room {
 		}
 		if ((new Date().getTime() - this.lastTouched) / 1000 / 60 > 1) {
 			this.reset();
-			this.needToBeDeleted = true;
+			this.needsToBeDeleted = true;
 		} else {
 			for (var snake of this.snakes) {
 				if (!snake.isBot) {
