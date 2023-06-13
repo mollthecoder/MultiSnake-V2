@@ -461,7 +461,8 @@ document.addEventListener("keydown",(e)=>{
       directionChanging = true;
     }
   }
-  if(e.which == 13){
+  if(e.which == 13 && !e.shiftKey){
+    e.preventDefault();
     if(chatInput.value.length > 0){
       sendChat();
     }
@@ -593,9 +594,24 @@ socket.on("win",(data)=>{
 
 
 // CHAT //
+const input = document.getElementById("chatinput");
+
+input.oninput = function() {
+    input.style.height = "";
+  input.style.height = input.scrollHeight + "px"
+};
+input.addEventListener('keydown', function (e) {
+    // Get the code of pressed key
+    const keyCode = e.which || e.keyCode;
+
+    // 13 represents the Enter key
+    if (keyCode === 13 && !e.shiftKey) {
+        e.preventDefault();
+    }
+});
 document.getElementById("sendchat").onclick = sendChat;
 function sendChat(){
-  if(user && user.verified && ((new Date().getFullYear() - user.yearBorn) >= 13)){
+  if(!isEmptyObject(user) && user.verified && ((new Date().getFullYear() - user.yearBorn) >= 13)){
     var chat = document.getElementById("chatinput").value;
     document.getElementById("chatinput").value = "";
     socket.emit("chat",{
@@ -604,10 +620,10 @@ function sendChat(){
       room,
     });
   }else{
-    if(user && (new Date().getFullYear() - user.yearBorn) < 13){
+    if(!isEmptyObject(user) && (new Date().getFullYear() - user.yearBorn) < 13){
       document.getElementById("chatinput").value = "";
       displayNotif("You must be over 13 to chat")
-    }else if(!user.verified){
+    }else if(!isEmptyObject(user) && !user.verified){
         displayNotif('<a href = "/verifyEmail">Verify</a> your email to chat')
     }else{
       displayNotif("<a href = '/login'>Login</a> to chat")
@@ -616,12 +632,12 @@ function sendChat(){
 }
 socket.on("chat",(data)=>{
   var string = "";
-  if(user && user.verified && ((new Date().getFullYear() - user.yearBorn) >= 13)){
-    string = `<p class="message"><span class = "msender">${data.from}:</span> ${data.message}</p>`;
+  if(!isEmptyObject(user) && user.verified && ((new Date().getFullYear() - user.yearBorn) >= 13)){
+    string = `<div class="message"><span class = "msender">${data.from}:</span> ${data.message}</div>`;
   }else{
-    if(user && !user.verified){
+    if(!isEmptyObject(user) && !user.verified){
         string = `<p class="message"><span class = "msender">System:</span> Your email must be verified to chat</p>`;
-    }else if(user && (new Date().getFullYear() - user.yearBorn) < 13){
+    }else if(!isEmptyObject(user) && (new Date().getFullYear() - user.yearBorn) < 13){
       string = `<p class="message"><span class = "msender">System:</span> You must be over 13 to chat</p>`;
     }else{
       string = `<p class="message"><span class = "msender">System:</span> <a href = "/login">Login</a> to chat</p>`;
