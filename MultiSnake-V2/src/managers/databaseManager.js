@@ -414,27 +414,43 @@ class DBManager{
   }
   
   async removeAPIKey(uid, apiKey) {
-    const params = {
+    const getParams = {
       TableName: this.TABLE_NAME,
       Key: {
         uid
-      },
-      UpdateExpression: "DELETE #ak :apiKey",
-      ExpressionAttributeNames: {
-        "#ak": "api_keys"
-      },
-      ExpressionAttributeValues: {
-        ":apiKey": this.dynamoClient.createSet([apiKey])
       }
     };
   
     try {
-      const data = await this.dynamoClient.update(params).promise();
+      let data = await this.dynamoClient.get(getParams).promise();
+      const apiKeys = data.Item.api_keys || [];
+  
+      // Remove the apiKey from the list
+      const updatedKeys = apiKeys.filter(key => key !== apiKey);
+  
+      const updateParams = {
+        TableName: this.TABLE_NAME,
+        Key: {
+          uid
+        },
+        UpdateExpression: "SET #ak = :updatedKeys",
+        ExpressionAttributeNames: {
+          "#ak": "api_keys"
+        },
+        ExpressionAttributeValues: {
+          ":updatedKeys": updatedKeys
+        },
+        ReturnValues: "UPDATED_NEW"
+      };
+  
+      // Update the item with the modified list
+      data = await this.dynamoClient.update(updateParams).promise();
       return data;
     } catch (err) {
       console.log(err);
     }
   }
+  
   
   async sendVerification(email, code) {
     const params = {

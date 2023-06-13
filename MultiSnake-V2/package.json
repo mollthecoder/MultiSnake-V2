@@ -23,6 +23,7 @@
     "morgan": "^1.10.0",
     "node-fetch": "^3.2.6",
     "nunjucks": "^3.2.4",
+    "safe-marked": "^15.0.0",
     "server": "^1.0.38",
     "socket.io": "^4.6.1",
     "sqlite": "^4.2.1",
