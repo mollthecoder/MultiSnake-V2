@@ -341,6 +341,9 @@ app.get('/api/v1/rooms', (req, res) => {
     res.json(reems);
 });
 
+app.use((req,res)=>{
+    res.render("404.njk");
+})
 
 
 
