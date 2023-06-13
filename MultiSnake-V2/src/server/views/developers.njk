@@ -2,6 +2,7 @@
 {% block head %}
 <link href = "/css/developers.css" rel = "stylesheet">
 <title>Developers | MultiSnake</title>
+<script>window.userUID = "{{ user.uid }}"</script>
 {% endblock %}
 
 {% block main %}
@@ -24,7 +25,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for uid in user.api_keys.values %}
+                        {% for uid in user.api_keys %}
                             <tr class = "table-row" id="row-{{ loop.index0 }}">
                                 <td><b>{{ loop.index0 }}</b></td>
                                 <td class = "uid">{{ uid }}</td>
@@ -37,7 +38,7 @@
                     </tbody>
                 </table>
             </div>
-            <button class = "btn" id = "add">Add Another Key</button>
+            <button class = "btn" id = "add-key">Add Another Key</button>
             {% else %}
                 <h1 class="heading">Developer Dashboard</h1>
                 <p><a href = "/verifyEmail">Verify your email</a> to create bots<p>
