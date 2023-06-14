@@ -156,6 +156,7 @@ app.get('/logout', (req, res) => {
 app.delete("/deleteKey",mustBeLoggedIn("You must be logged in to delete an API key"),async (req,res)=>{
     const { uid, api_key } = req.body;
     await dbManager.removeAPIKey(uid,api_key);
+    await 
     res.status(200).json({
         message:`${api_key} successfully deleted`,
         color: "green"
@@ -165,11 +166,13 @@ app.post("/newAPIKey",mustBeLoggedIn("You must be logged in to create an API key
     const { uid } = req.body;
     console.log(uid)
     var key = generateAPIKey();
-    console.log(key)
+    var botUid = uid();
     try{
         await dbManager.addAPIKey(uid,key);
+        await apiKeyManager.createBot()
         res.status(200).json({
             key,
+            botUid,
             message: key + " successfully created",
             color: "green"
         });

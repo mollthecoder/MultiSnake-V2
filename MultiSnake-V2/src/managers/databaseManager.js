@@ -17,7 +17,7 @@ async function cleanAPIKeys(){
       }
     })
   }catch(err){
-    // .. do something here eventually
+    console.error(err);
   }
 
   setTimeout(cleanAPIKeys,10000);
@@ -53,13 +53,15 @@ class ApiKeyManager {
           api_key TEXT PRIMARY KEY,
           expiredAt INTEGER,
           uid TEXT
+          isBot BOOLEAN
+          linkedAccount TEXT NULL
         )
       `);
       console.log('Database initialized successfully.');
       return db;
     } catch (err) {
       console.error('Error initializing database:', err);
-      throw err;
+      
     }
   }
 
@@ -67,24 +69,34 @@ class ApiKeyManager {
     try {
       await this.db.run(
         `
-        INSERT INTO api_keys (api_key, expiredAt, uid)
-        VALUES (?, ?, ?)
+        INSERT INTO api_keys (api_key, expiredAt, uid, isBot, linkedAccount)
+        VALUES (?, ?, ?, ?, ?)
         ON CONFLICT(api_key) DO UPDATE SET expiredAt = excluded.expiredAt, uid = excluded.uid
         `,
-        [apiKey, expiredAt, uid]
+        [apiKey, expiredAt, uid, 0, null]
       );
     } catch (err) {
       console.error('Error adding API key:', err);
-      throw err;
     }
   }
-
+  async createBot(linkedAccount, key, uid){
+    try{
+    await this.db.run(
+      `
+      INSERT INTO api_keys (api_key, expiredAt, uid, isBot, linkedAccount)
+      VALUES (?, ?, ?, ?, ?)
+      `,
+      [key, 0, uid, 1, linkedAccount]
+    )
+    }catch(err){
+      console.error(err);
+    }
+  }
   async updateUid(apiKey, uid) {
     try {
       await this.db.run(`UPDATE api_keys SET uid = ? WHERE api_key = ?`, [uid, apiKey]);
     } catch (err) {
       console.error('Error updating UID:', err);
-      throw err;
     }
   }
 
@@ -94,7 +106,6 @@ class ApiKeyManager {
       console.log('API key deleted successfully.');
     } catch (err) {
       console.error('Error deleting API key:', err);
-      throw err;
     }
   }
 
@@ -107,7 +118,6 @@ class ApiKeyManager {
       return expiredAt > 0 && expiredAt < currentTime;
     } catch (err) {
       console.error('Error checking expiration status:', err);
-      throw err;
     }
   }
   async getAPIKeysForUid(uid){
@@ -115,7 +125,7 @@ class ApiKeyManager {
       const rows = await this.db.all(`SELECT api_key FROM api_keys WHERE uid = ?`,[uid]);
       return rows;
     }catch(err){
-      throw err;
+      console.error(err)
     }
   }
   async getAPIKey(apiKey) {
@@ -130,7 +140,7 @@ class ApiKeyManager {
       }
     } catch (err) {
       console.error('Error retrieving API key:', err);
-      throw err;
+      
     }
   }
 
@@ -140,7 +150,7 @@ class ApiKeyManager {
       console.log('Expired API keys deleted successfully.');
     } catch (err) {
       console.error('Error deleting expired API keys:', err);
-      throw err;
+      
     }
   }
 
@@ -389,7 +399,7 @@ class DBManager{
       console.log(err);
     }
   }
-  async addAPIKey(uid, apiKey) {
+  async addAPIKey(uid, apiKey, botUid) {
     const params = {
       TableName: this.TABLE_NAME,
       Key: {
@@ -401,7 +411,12 @@ class DBManager{
       },
       ExpressionAttributeValues: {
         ":empty_list": [],
-        ":apiKey": [apiKey]
+        ":apiKey": [
+          {
+            apiKey,
+            botUid
+          }
+        ]
       }
     };
   
