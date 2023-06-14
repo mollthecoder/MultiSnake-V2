@@ -97,7 +97,9 @@ function updateSession(log) {
 }
 
 app.get("/", (req, res) => {
-    res.render("index.njk");
+    res.render("index.njk",{
+        user:req.session.user
+    });
 });
 // GET method to render the login page
 app.get('/login', (req, res) => {
@@ -302,8 +304,7 @@ app.post('/verify-recaptcha', async (req, res) => {
                 possibleKeys = await apiKeyManager.getAPIKeysForUid(req.session.user.uid);
             }
             // Generate and assign a key to the client
-            //const key = (possibleKeys[0]) ? possibleKeys[0].api_key : generateAPIKey(); (this code is buggy when a user is logged in...)
-            const key = generateAPIKey();
+            const key = (possibleKeys[0]) ? possibleKeys[0].api_key : generateAPIKey();
             const expiredAt = new Date().getTime() + (1000 * 60 * 60);
             const uid = (req.session && req.session.user) ? req.session.user.uid || null : null;
 
