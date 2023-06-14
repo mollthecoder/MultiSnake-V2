@@ -664,6 +664,7 @@ grecaptcha.ready(function () {
           const { key } = data;
           // Handle the received key, for example:
           api_key = key;
+          console.log(api_key);
           join();
         } else {
           const { error } = data;

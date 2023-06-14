@@ -1,5 +1,5 @@
 const express = require('express');
-const { json2array, generateAPIKey, rand } = require("../etc/helpers.js");
+const { json2array, generateAPIKey, rand, guid } = require("../etc/helpers.js");
 const { manager } = require("../managers/roomManager.js");
 const { resolve } = require("path");
 const http = require('http');
@@ -156,7 +156,6 @@ app.get('/logout', (req, res) => {
 app.delete("/deleteKey",mustBeLoggedIn("You must be logged in to delete an API key"),async (req,res)=>{
     const { uid, api_key } = req.body;
     await dbManager.removeAPIKey(uid,api_key);
-    await 
     res.status(200).json({
         message:`${api_key} successfully deleted`,
         color: "green"
@@ -164,12 +163,11 @@ app.delete("/deleteKey",mustBeLoggedIn("You must be logged in to delete an API k
 })
 app.post("/newAPIKey",mustBeLoggedIn("You must be logged in to create an API key"),async (req,res)=>{
     const { uid } = req.body;
-    console.log(uid)
     var key = generateAPIKey();
-    var botUid = uid();
+    var botUid = guid();
     try{
-        await dbManager.addAPIKey(uid,key);
-        await apiKeyManager.createBot()
+        await dbManager.addAPIKey(uid,key,botUid);
+        await apiKeyManager.createBot(uid,key,botUid);
         res.status(200).json({
             key,
             botUid,
@@ -304,7 +302,8 @@ app.post('/verify-recaptcha', async (req, res) => {
                 possibleKeys = await apiKeyManager.getAPIKeysForUid(req.session.user.uid);
             }
             // Generate and assign a key to the client
-            const key = (possibleKeys[0]) ? possibleKeys[0].api_key : generateAPIKey();
+            //const key = (possibleKeys[0]) ? possibleKeys[0].api_key : generateAPIKey(); (this code is buggy when a user is logged in...)
+            const key = generateAPIKey();
             const expiredAt = new Date().getTime() + (1000 * 60 * 60);
             const uid = (req.session && req.session.user) ? req.session.user.uid || null : null;
 

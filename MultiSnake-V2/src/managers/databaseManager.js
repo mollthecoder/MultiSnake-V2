@@ -1,5 +1,5 @@
 const AWS = require("aws-sdk");
-const { uid } = require("../etc/helpers.js");
+const { guid } = require("../etc/helpers.js");
 
 AWS.config.update({
   region: "us-west-2",
@@ -7,21 +7,7 @@ AWS.config.update({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
 
-async function cleanAPIKeys(){
-  try{
-    var valid_keys = await API_KEYS.getDoc("valid_keys");
-    var cleaned = {};
-    Object.keys(valid_keys).forEach(key=>{
-      if(valid_keys[key].expiredAt > new Date().getTime()){
-        cleaned[key] = valid_keys[key]
-      }
-    })
-  }catch(err){
-    console.error(err);
-  }
 
-  setTimeout(cleanAPIKeys,10000);
-}
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 
@@ -52,8 +38,8 @@ class ApiKeyManager {
         CREATE TABLE IF NOT EXISTS api_keys (
           api_key TEXT PRIMARY KEY,
           expiredAt INTEGER,
-          uid TEXT
-          isBot BOOLEAN
+          uid TEXT,
+          isBot BOOLEAN,
           linkedAccount TEXT NULL
         )
       `);
@@ -134,7 +120,7 @@ class ApiKeyManager {
       if (!row) {
         return false;
       } else {
-        const expiredAt = row.expiredAt || -1;
+        const expiredAt = row.expiredAt || 0;
         const uid = row.uid || null;
         return { expiredAt, uid };
       }
@@ -146,7 +132,7 @@ class ApiKeyManager {
 
   async deleteExpiredKeys() {
     try {
-      await this.db.run('DELETE FROM api_keys WHERE expiredAt < ?', [Date.now()]);
+      await this.db.run('DELETE FROM api_keys WHERE expiredAt < ? AND isBot = ?', [Date.now(),0]);
       console.log('Expired API keys deleted successfully.');
     } catch (err) {
       console.error('Error deleting expired API keys:', err);
@@ -233,7 +219,7 @@ class DBManager{
     const params = {
       TableName: this.TABLE_NAME,
       Item: {
-        uid: uid(),
+        uid: guid(),
         username,
         email,
         gamesPlayed: 0,
@@ -441,7 +427,7 @@ class DBManager{
       const apiKeys = data.Item.api_keys || [];
   
       // Remove the apiKey from the list
-      const updatedKeys = apiKeys.filter(key => key !== apiKey);
+      const updatedKeys = apiKeys.filter(key => key.apiKey !== apiKey);
   
       const updateParams = {
         TableName: this.TABLE_NAME,
@@ -500,7 +486,6 @@ class DBManager{
   }
 }
 
-cleanAPIKeys();
 
 const dbManager = new DBManager();
 module.exports = {

@@ -1,4 +1,4 @@
-const { json2array,uid } = require("../etc/helpers.js")
+const { json2array,guid } = require("../etc/helpers.js")
 const { emitBoard } = require("../server/eventListener.js");
 const { manager } = require("./roomManager.js");
 const { Bot } = require("../bots/bots.js");
@@ -26,7 +26,7 @@ class GameManager{
           manager.deleteRoom(room.uid);
         }else{
           if(room.snakes.length < 3){
-            var bot = new Bot(uid(),room.uid,"standard");
+            var bot = new Bot(guid(),room.uid,"standard");
             room.addSnake(bot,true);
             manager.addSnake(bot,true);
           }

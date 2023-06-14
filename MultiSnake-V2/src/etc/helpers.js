@@ -63,7 +63,7 @@ function sumArrays(...arrays) {
     const result = Array.from({ length: n });
     return result.map((_, i) => arrays.map(xs => xs[i] || 0).reduce((sum, x) => sum + x, 0));
 }
-const uid = () => {
+function guid(){
     return randomUUID();
 };
 function manhattanDistance(point1, point2) {
@@ -112,7 +112,7 @@ module.exports = {
     oddsOf,
     json2array,
     sumArrays,
-    uid,
+    guid,
     pickColor,
     manhattanDistance,
     directionVector,

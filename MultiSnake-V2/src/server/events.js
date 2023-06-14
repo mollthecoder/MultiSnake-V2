@@ -1,6 +1,6 @@
 const { manager } = require("../managers/roomManager.js");
 const { Snake } = require("../objects/snake.js");
-const { uid, generateName, json2array, pickColor, isEmptyObject } = require("../etc/helpers.js");
+const { guid, generateName, json2array, pickColor, isEmptyObject } = require("../etc/helpers.js");
 const { hashMap } = require("../objects/room.js");
 const { io } = require("./webs.js");
 const { createMarkdown } = require("safe-marked")
@@ -41,7 +41,7 @@ io.on("connection", (socket) => {
         } else {
             SPAWN_REQUEST_TRACKER[socket.id] = {
                 willSpawnBot: data.bot,
-                uid: uid(),
+                uid: guid(),
                 api_key: data.api_key
             }
         }
@@ -52,7 +52,7 @@ io.on("connection", (socket) => {
         var room = roomString;
         var roomToJoin = manager.getRoom(room);
         if (roomToJoin) {
-            var id = SPAWN_REQUEST_TRACKER[socket.id].uid || uid();
+            var id = SPAWN_REQUEST_TRACKER[socket.id].uid || guid();
             var snakeToCreate = new Snake(id, username, pickColor(), room, spawn, SPAWN_REQUEST_TRACKER[socket.id].willSpawnBot);
             if (SPAWN_REQUEST_TRACKER[socket.id].loggedIn) {
                 snakeToCreate.login();
@@ -60,8 +60,8 @@ io.on("connection", (socket) => {
             roomToJoin.addSnake(snakeToCreate);
             manager.addSnake(snakeToCreate);
         } else {
-            var id = SPAWN_REQUEST_TRACKER[socket.id].uid || uid();
-            var rID = uid();
+            var id = SPAWN_REQUEST_TRACKER[socket.id].uid || guid();
+            var rID = guid();
             var roomToCreate = new hashMap[roomType](room, room);
             manager.createRoom(roomToCreate);
             var room = manager.getRoom(roomToCreate.uid);
@@ -85,7 +85,7 @@ io.on("connection", (socket) => {
         var roomType = roomString.split("-")[0] || "standard";
         var room = roomString;
         var roomToJoin = manager.getRoom(room);
-        var id = (uidPlease) ? uidPlease : uid();
+        var id = (uidPlease) ? uidPlease : guid();
         var loggedIn = (uidPlease) ? true : false;
 
         var room_key = null;
@@ -93,7 +93,7 @@ io.on("connection", (socket) => {
             socket.join(roomToJoin.uid);
             room_key = roomToJoin.uid;
         } else {
-            var rID = uid();
+            var rID = guid();
             var roomToCreate = new hashMap[roomType](room, room);
             manager.createRoom(roomToCreate);
             var room = manager.getRoom(roomToCreate.uid);
@@ -101,7 +101,7 @@ io.on("connection", (socket) => {
             var room_key = room.uid;
         }
         if (key_data) {
-            if (key_data.expiredAt > new Date().getTime()) {
+            if (key_data.isBot == 1 || key_data.expiredAt > new Date().getTime()) {
                 if (!manager.getSnake(key_data.uid)) {
                     await apiKeyManager.updateUid(api_key, id)
                     SPAWN_REQUEST_TRACKER[socket.id] = {
@@ -147,25 +147,28 @@ io.on("connection", (socket) => {
 
         if (!key_data) {
             socket.emit("error", {
+                code: 102,
                 message: "API key does not exist"
             })
         } else if (key_data.uid == data.uid) {
-            if (key_data.expiredAt == -1 || key_data.expiredAt > new Date().getTime()) {
+            if (key_data.isBot == 1 || key_data.expiredAt > new Date().getTime()) {
                 var snake = manager.getSnake(data.uid);
-                if (isEmptyObject(snake)) {
+                if (snake && !isEmptyObject(snake)) {
                     snake.changeDirection(data.direction);
                 };
             } else {
                 socket.emit("error", {
+                    code: 101,
                     message: "API key expired"
                 });
             }
         } else {
             socket.emit("error", {
+                code: 103,
                 message: "API key and UID mismatch"
             });
             var snake = manager.getSnake(data.uid);
-            if (isEmptyObject(snake)) {
+            if (snake && !isEmptyObject(snake)) {
                 io.to(snake.getRoom().uid).emit("chat", {
                     from: "System",
                     message: `Someone seems to be trying to hack ${snake.name}. Watch out!`
