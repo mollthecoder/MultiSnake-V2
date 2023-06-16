@@ -616,6 +616,8 @@ function sendChat(){
     document.getElementById("chatinput").value = "";
     socket.emit("chat",{
       from: username,
+      uid:player,
+      api_key,
       message: chat,
       room,
     });

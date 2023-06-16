@@ -176,27 +176,59 @@ io.on("connection", (socket) => {
             }
         }
     });
-    socket.on("chat", (data) => {
+    socket.on("chat", async (data) => {
         try {
-            var from = data.from || "No one";
-            from = xss(from);
-            from = filter.clean(from);
+            var api_key = data.api_key;
+            var snake = manager.getSnake(data.uid);
 
+            var key_data = await apiKeyManager.getAPIKey(api_key);
 
-            var message = data.message;
-            message = message.split("\n");
-            message = message.map(phrase => {
-                phrase = phrase || "<delete>";
-                return filter.clean(phrase)
-            }).filter((phrase) => phrase !== "<delete>")
-            message = message.join("\n");
-            message = markdown(message);
-            var room = data.room;
-
-            io.to(room).emit("chat", {
-                from,
-                message
-            })
+            if (!key_data) {
+                socket.emit("error", {
+                    code: 102,
+                    message: "API key does not exist"
+                })
+            } else if (key_data.uid == data.uid) {
+                if (key_data.isBot == 1 || key_data.expiredAt > new Date().getTime()) {
+                    var from = data.from || "No one";
+                    from = xss(from);
+                    from = filter.clean(from);
+        
+        
+                    var message = data.message;
+                    message = message.split("\n");
+                    message = message.map(phrase => {
+                        phrase = phrase || "<delete>";
+                        return filter.clean(phrase)
+                    }).filter((phrase) => phrase !== "<delete>")
+                    message = message.join("\n");
+                    message = markdown(message);
+                    var room = data.room;
+        
+                    io.to(room).emit("chat", {
+                        from,
+                        message
+                    })
+                } else {
+                    socket.emit("error", {
+                        code: 101,
+                        message: "API key expired"
+                    });
+                }
+            } else {
+                socket.emit("error", {
+                    code: 103,
+                    message: "API key and UID mismatch"
+                });
+                var snake = manager.getSnake(data.uid);
+                if (snake && !isEmptyObject(snake)) {
+                    io.to(snake.getRoom().uid).emit("chat", {
+                        from: "System",
+                        message: `Someone seems to be trying to hack ${snake.name}. Watch out!`
+                    });
+                }
+            }
+            
         } catch (err) {
             io.emit("error", {
                 code: 200,
