@@ -1,5 +1,5 @@
 const express = require('express');
-const { json2array, generateAPIKey, rand } = require("../etc/helpers.js");
+const { json2array, generateAPIKey, rand, guid } = require("../etc/helpers.js");
 const { manager } = require("../managers/roomManager.js");
 const { resolve } = require("path");
 const http = require('http');
@@ -97,7 +97,9 @@ function updateSession(log) {
 }
 
 app.get("/", (req, res) => {
-    res.render("index.njk");
+    res.render("index.njk",{
+        user:req.session.user
+    });
 });
 // GET method to render the login page
 app.get('/login', (req, res) => {
@@ -163,13 +165,14 @@ app.delete("/deleteKey",mustBeLoggedIn("You must be logged in to delete an API k
 })
 app.post("/newAPIKey",mustBeLoggedIn("You must be logged in to create an API key"),async (req,res)=>{
     const { uid } = req.body;
-    console.log(uid)
     var key = generateAPIKey();
-    console.log(key)
+    var botUid = guid();
     try{
-        await dbManager.addAPIKey(uid,key);
+        await dbManager.addAPIKey(uid,key,botUid);
+        await apiKeyManager.createBot(uid,key,botUid);
         res.status(200).json({
             key,
+            botUid,
             message: key + " successfully created",
             color: "green"
         });
@@ -341,6 +344,9 @@ app.get('/api/v1/rooms', (req, res) => {
     res.json(reems);
 });
 
+app.use((req,res)=>{
+    res.render("404.njk");
+})
 
 
 

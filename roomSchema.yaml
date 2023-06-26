@@ -34,7 +34,7 @@ helpers.js
   - oddsOf(float0-100): Boolean # true or false depending on given percent chance
   - json2array(json): Array # converts json into an array
   - sumArrays(array1, array2): Array # adds elements of two integer arrays together
-  - uid(): Str # generates a random UID
+  - guid(): Str # generates a random UID
   - pickColor(): Str # generates a random color
   - manhattanDistance(point1,point2): Float # calculates the distance between two points\ 
   - directionVector(direction: Str): Array # returns a vector given up, down, left, or right
@@ -156,6 +156,7 @@ error codes
 - 100: player already exists with that API key
 - 101: API key expired
 - 102: API key does not exist
+- 103: API key and UID mismatch
 
 # 2xx codes- Socket.io related\
 - 200: Bad words failed to clean

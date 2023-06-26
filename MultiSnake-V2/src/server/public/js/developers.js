@@ -1,11 +1,17 @@
 function handleButtons(){
-    var copy_keys = document.querySelectorAll(".copy-key")
-    var delete_keys = document.querySelectorAll(".delete-key")
+    var copy_keys = document.querySelectorAll(".copy-key");
+    var copy_uids = document.querySelectorAll(".copy-uid");
+    var delete_keys = document.querySelectorAll(".delete-key");
     
+
     copy_keys.forEach(button=>{
         button = removeListeners(button);
-        button.addEventListener("click",handleCopyRow)
+        button.addEventListener("click",handleCopyKey)
     });
+    copy_uids.forEach(button=>{
+        button = removeListeners(button);
+        button.addEventListener("click",handleCopyUid)
+    })
     delete_keys.forEach(button=>{
         button = removeListeners(button);
         button.addEventListener("click",handleDeleteRow)
@@ -15,10 +21,24 @@ handleButtons();
 var add_key = document.getElementById("add-key")
 add_key.addEventListener("click",handleAddKey)
 
-
-function handleCopyRow(e){
+function handleCopyUid(e){
     var rowNum = e.target.getAttribute('data-row')
-    var key = document.querySelector(`#row-${rowNum} .uid`);
+    var uid = document.querySelector(`#row-${rowNum} .uid`);
+    var button = document.querySelector(`#row-${rowNum} .copy-uid`);
+
+    uid = uid.innerHTML;
+
+    navigator.clipboard.writeText(uid);
+
+    button.innerHTML = "Copied!"
+
+    setTimeout(()=>{
+        button.innerHTML = "Copy UID"
+    },500)
+}
+function handleCopyKey(e){
+    var rowNum = e.target.getAttribute('data-row')
+    var key = document.querySelector(`#row-${rowNum} .apiKey`);
     var button = document.querySelector(`#row-${rowNum} .copy-key`)
     var api_key = key.innerHTML
     // Copy the text inside the text field
@@ -32,7 +52,7 @@ function handleCopyRow(e){
 }
 function handleDeleteRow(e){
     var rowNum = e.target.getAttribute('data-row')
-    var key = document.querySelector(`#row-${rowNum} .uid`);
+    var key = document.querySelector(`#row-${rowNum} .apiKey`);
     var button = document.querySelector(`#row-${rowNum} .delete-key`);
     var row = document.querySelector("#row-"+rowNum)
     var api_key = key.innerHTML
@@ -89,31 +109,47 @@ async function handleAddKey(e){
     rowID.appendChild(rowIDBold);
     tr.appendChild(rowID);
 
+    var rowKey = document.createElement("td");
+    rowKey.classList.add("apiKey");
+    var rowKeyText = document.createTextNode(data.key);
+    rowKey.appendChild(rowKeyText);
+    tr.appendChild(rowKey);
+
     var rowUID = document.createElement("td");
     rowUID.classList.add("uid");
-    var rowUIDText = document.createTextNode(data.key);
+    var rowUIDText = document.createTextNode(data.botUid);
     rowUID.appendChild(rowUIDText);
     tr.appendChild(rowUID);
 
     var rowManage = document.createElement('td');
-    var copyButton = document.createElement('button');
+    var copyButton0 = document.createElement('button');
+    var copyButton1 = document.createElement('button')
     var deleteButton = document.createElement('button');
 
-    copyButton.classList.add("btn");
-    copyButton.classList.add('btn-inline');
-    copyButton.classList.add('copy-key');
-    copyButton.setAttribute('data-row',rowNum);
-    var copyButtonText = document.createTextNode("Copy Key");
-    copyButton.appendChild(copyButtonText);
+    copyButton0.classList.add("btn");
+    copyButton0.classList.add('btn-inline');
+    copyButton0.classList.add('copy-key');
+    copyButton0.setAttribute('data-row',rowNum);
+    var copyButton0Text = document.createTextNode("Copy Key");
+    copyButton0.appendChild(copyButton0Text);
 
-    rowManage.appendChild(copyButton);
+    rowManage.appendChild(copyButton0);
+
+    copyButton1.classList.add("btn");
+    copyButton1.classList.add('btn-inline');
+    copyButton1.classList.add('copy-uid');
+    copyButton1.setAttribute('data-row',rowNum);
+    var copyButton1Text = document.createTextNode("Copy UID");
+    copyButton1.appendChild(copyButton1Text);
+
+    rowManage.appendChild(copyButton1);
 
     deleteButton.classList.add('btn');
     deleteButton.classList.add('btn-inline');
     deleteButton.classList.add('btn-danger');
     deleteButton.classList.add('delete-key');
     deleteButton.setAttribute('data-row',rowNum);
-    var deleteButtonText = document.createTextNode('Delete Key');
+    var deleteButtonText = document.createTextNode('Delete');
     deleteButton.appendChild(deleteButtonText);
 
     rowManage.appendChild(deleteButton);

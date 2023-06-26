@@ -123,7 +123,7 @@ class Room {
 					break;
 			}
 
-			for (var j = 1; j <= 5; j++) {
+			for (var j = 1; j <= 10; j++) {
 				var ny = bestPoint[0] + j * dy;
 				var nx = bestPoint[1] + j * dx;
 
@@ -198,11 +198,11 @@ class Room {
 
 		// assign a 1 value to each body part coordinate of each snake
 		for (const snake of snakes) {
-			for (const bodyPart of snake.body) {
-				const x = bodyPart[0];
-				const y = bodyPart[1];
-				matrix[y][x] = 1;
-			}
+            for (var i = 0; i < snake.body.length; i++){
+                const x = snake.body[i][0];
+                const y = snake.body[i][1];
+                matrix[y][x] = (snake.body.length - i) / snake.body.length
+            }
 		}
 
 		// assign a 1 value to each wall coordinate
