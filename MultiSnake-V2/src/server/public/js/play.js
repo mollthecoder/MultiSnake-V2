@@ -99,6 +99,7 @@ socket.on("optimal_spawn",(data)=>{
     socket.emit("spawn_request",{
       room,
       username,
+      uid: player,
       spawn: {
         point: spawnZone.point,
         direction: spawnZone.direction,

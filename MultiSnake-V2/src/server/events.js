@@ -41,7 +41,7 @@ io.on("connection", (socket) => {
         } else {
             SPAWN_REQUEST_TRACKER[socket.id] = {
                 willSpawnBot: data.bot,
-                uid: guid(),
+                uid: (data.uid) ? data.uid || guid() : guid(),
                 api_key: data.api_key
             }
         }
@@ -61,7 +61,6 @@ io.on("connection", (socket) => {
             manager.addSnake(snakeToCreate);
         } else {
             var id = SPAWN_REQUEST_TRACKER[socket.id].uid || guid();
-            var rID = guid();
             var roomToCreate = new hashMap[roomType](room, room);
             manager.createRoom(roomToCreate);
             var room = manager.getRoom(roomToCreate.uid);
@@ -93,7 +92,6 @@ io.on("connection", (socket) => {
             socket.join(roomToJoin.uid);
             room_key = roomToJoin.uid;
         } else {
-            var rID = guid();
             var roomToCreate = new hashMap[roomType](room, room);
             manager.createRoom(roomToCreate);
             var room = manager.getRoom(roomToCreate.uid);
