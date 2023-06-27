@@ -6,28 +6,31 @@
   "main": "src/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "call env.bat && node --experimental-worker src/index.js"
+    "start": "call env.bat && node --experimental-worker src/index.js",
+    "build": "parcel build src/index.js --dist-dir dist"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@mapbox/node-pre-gyp": "^1.0.10",
-    "@sojs_coder/sodb": "^1.5.9",
-    "@tensorflow/tfjs-node": "^4.5.0",
-    "aws-sdk": "^2.1381.0",
+    "@mapbox/node-pre-gyp": "^1.0.0",
+    "aws-sdk": "^2.1405.0",
     "axios": "^1.4.0",
     "bad-words": "^3.0.4",
     "express": "^4.18.2",
+    "express-session": "^1.17.3",
     "ip": "^1.1.8",
     "morgan": "^1.10.0",
-    "node-fetch": "^3.2.6",
+    "node-fetch": "^3.3.1",
     "nunjucks": "^3.2.4",
     "safe-marked": "^15.0.0",
     "server": "^1.0.38",
-    "socket.io": "^4.6.1",
+    "socket.io": "^4.7.0",
     "sqlite": "^4.2.1",
     "sqlite3": "^5.1.6",
     "xss": "^1.0.14"
+  },
+  "devDependencies": {
+    "parcel": "^2.9.3"
   }
 }
