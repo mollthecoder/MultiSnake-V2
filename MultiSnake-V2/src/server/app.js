@@ -1,5 +1,5 @@
 const express = require('express');
-const { json2array, generateAPIKey, rand } = require("../etc/helpers.js");
+const { json2array, generateAPIKey, rand, guid } = require("../etc/helpers.js");
 const { manager } = require("../managers/roomManager.js");
 const { resolve } = require("path");
 const http = require('http');
@@ -38,8 +38,9 @@ app.use(
         saveUninitialized: true
     })
 );
-app.use(restrict(["/account","/developers"], "/login", true));
-app.use(restrict(["/login", "/signup", "verifyEmail"], "/account", false))
+
+app.use(restrict(["/account"], "/login", true));
+app.use(restrict(["/login", "/signup"], "/account", false))
 function restrict(urls, redirect, loggedInToAccess) {
     return (req, res, next) => {
         var path = req._parsedUrl.pathname;
@@ -65,6 +66,7 @@ function restrict(urls, redirect, loggedInToAccess) {
         }
     }
 }
+
 function mustBeLoggedIn(message) { 
     // equivalent of restrict() but for API endpoints
     return (req,res,next)=>{
@@ -73,7 +75,8 @@ function mustBeLoggedIn(message) {
         }else{
             res.status(405).json({
                 message,
-                color: "red"
+                color: "red",
+                redirect: "/login"
             })
         }
     }
@@ -92,8 +95,11 @@ function updateSession(log) {
         next();
     }
 }
+
 app.get("/", (req, res) => {
-    res.render("index.njk");
+    res.render("index.njk",{
+        user:req.session.user
+    });
 });
 // GET method to render the login page
 app.get('/login', (req, res) => {
@@ -130,10 +136,10 @@ app.get("/play/:room", (req, res) => {
     });
 });
 
-app.get("/verifyEmail", (req, res) => {
+app.get("/verifyEmail", async (req, res) => {
     if(req.session.user && req.session.user.email){
         req.session.verificationCode = rand(6);
-        dbManager.sendVerification(req.session.user.email, req.session.verificationCode);
+        await dbManager.sendVerification(req.session.user.email, req.session.verificationCode);
         res.render("verify.njk", {
             user: req.session.user
         });
@@ -149,17 +155,38 @@ app.get('/logout', (req, res) => {
 
 });
 
-app.post("/deleteKey",mustBeLoggedIn("You must be logged in to delete an API key"),(req,res)=>{
-    if(req.session.user && req.session.user.email){
-
-    }else{
-
+app.delete("/deleteKey",mustBeLoggedIn("You must be logged in to delete an API key"),async (req,res)=>{
+    const { uid, api_key } = req.body;
+    await dbManager.removeAPIKey(uid,api_key);
+    res.status(200).json({
+        message:`${api_key} successfully deleted`,
+        color: "green"
+    })
+})
+app.post("/newAPIKey",mustBeLoggedIn("You must be logged in to create an API key"),async (req,res)=>{
+    const { uid } = req.body;
+    var key = generateAPIKey();
+    var botUid = guid();
+    try{
+        await dbManager.addAPIKey(uid,key,botUid);
+        await apiKeyManager.createBot(uid,key,botUid);
+        res.status(200).json({
+            key,
+            botUid,
+            message: key + " successfully created",
+            color: "green"
+        });
+    }catch(err){
+        res.status(500).json({
+            message:err.message,
+            color: "red"
+        })
     }
+
 })
 app.post("/verifyEmail", async (req, res) => {
     if (req.session.verificationCode && req.session.user) {
         const { code } = req.body;
-
         if (code == req.session.verificationCode) {
             await dbManager.setVerified(req.session.user.uid);
             res.status(200).json({ message: req.session.user.email + " successfully verified", color: "green", "redirect": "/account" })
@@ -317,6 +344,9 @@ app.get('/api/v1/rooms', (req, res) => {
     res.json(reems);
 });
 
+app.use((req,res)=>{
+    res.render("404.njk");
+})
 
 
 

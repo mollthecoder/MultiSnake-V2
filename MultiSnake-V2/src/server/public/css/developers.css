@@ -52,7 +52,7 @@ td {
     width: 100%;
 }
 
-.uid {
+.apiKey,.uid {
     width: auto;
     text-align: right;
     white-space: nowrap;

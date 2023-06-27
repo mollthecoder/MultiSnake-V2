@@ -1,5 +1,5 @@
 const AWS = require("aws-sdk");
-const { uid } = require("../etc/helpers.js");
+const { guid } = require("../etc/helpers.js");
 
 AWS.config.update({
   region: "us-west-2",
@@ -7,21 +7,7 @@ AWS.config.update({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
 
-async function cleanAPIKeys(){
-  try{
-    var valid_keys = await API_KEYS.getDoc("valid_keys");
-    var cleaned = {};
-    Object.keys(valid_keys).forEach(key=>{
-      if(valid_keys[key].expiredAt > new Date().getTime()){
-        cleaned[key] = valid_keys[key]
-      }
-    })
-  }catch(err){
-    // .. do something here eventually
-  }
 
-  setTimeout(cleanAPIKeys,10000);
-}
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 
@@ -52,14 +38,16 @@ class ApiKeyManager {
         CREATE TABLE IF NOT EXISTS api_keys (
           api_key TEXT PRIMARY KEY,
           expiredAt INTEGER,
-          uid TEXT
+          uid TEXT,
+          isBot BOOLEAN,
+          linkedAccount TEXT NULL
         )
       `);
       console.log('Database initialized successfully.');
       return db;
     } catch (err) {
       console.error('Error initializing database:', err);
-      throw err;
+      
     }
   }
 
@@ -67,24 +55,34 @@ class ApiKeyManager {
     try {
       await this.db.run(
         `
-        INSERT INTO api_keys (api_key, expiredAt, uid)
-        VALUES (?, ?, ?)
+        INSERT INTO api_keys (api_key, expiredAt, uid, isBot, linkedAccount)
+        VALUES (?, ?, ?, ?, ?)
         ON CONFLICT(api_key) DO UPDATE SET expiredAt = excluded.expiredAt, uid = excluded.uid
         `,
-        [apiKey, expiredAt, uid]
+        [apiKey, expiredAt, uid, 0, null]
       );
     } catch (err) {
       console.error('Error adding API key:', err);
-      throw err;
     }
   }
-
+  async createBot(linkedAccount, key, uid){
+    try{
+    await this.db.run(
+      `
+      INSERT INTO api_keys (api_key, expiredAt, uid, isBot, linkedAccount)
+      VALUES (?, ?, ?, ?, ?)
+      `,
+      [key, 0, uid, 1, linkedAccount]
+    )
+    }catch(err){
+      console.error(err);
+    }
+  }
   async updateUid(apiKey, uid) {
     try {
       await this.db.run(`UPDATE api_keys SET uid = ? WHERE api_key = ?`, [uid, apiKey]);
     } catch (err) {
       console.error('Error updating UID:', err);
-      throw err;
     }
   }
 
@@ -94,7 +92,6 @@ class ApiKeyManager {
       console.log('API key deleted successfully.');
     } catch (err) {
       console.error('Error deleting API key:', err);
-      throw err;
     }
   }
 
@@ -107,7 +104,6 @@ class ApiKeyManager {
       return expiredAt > 0 && expiredAt < currentTime;
     } catch (err) {
       console.error('Error checking expiration status:', err);
-      throw err;
     }
   }
   async getAPIKeysForUid(uid){
@@ -115,7 +111,7 @@ class ApiKeyManager {
       const rows = await this.db.all(`SELECT api_key FROM api_keys WHERE uid = ?`,[uid]);
       return rows;
     }catch(err){
-      throw err;
+      console.error(err)
     }
   }
   async getAPIKey(apiKey) {
@@ -124,23 +120,23 @@ class ApiKeyManager {
       if (!row) {
         return false;
       } else {
-        const expiredAt = row.expiredAt || -1;
+        const expiredAt = row.expiredAt || 0;
         const uid = row.uid || null;
         return { expiredAt, uid };
       }
     } catch (err) {
       console.error('Error retrieving API key:', err);
-      throw err;
+      
     }
   }
 
   async deleteExpiredKeys() {
     try {
-      await this.db.run('DELETE FROM api_keys WHERE expiredAt < ?', [Date.now()]);
+      await this.db.run('DELETE FROM api_keys WHERE expiredAt < ? AND isBot = ?', [Date.now(),0]);
       console.log('Expired API keys deleted successfully.');
     } catch (err) {
       console.error('Error deleting expired API keys:', err);
-      throw err;
+      
     }
   }
 
@@ -223,7 +219,7 @@ class DBManager{
     const params = {
       TableName: this.TABLE_NAME,
       Item: {
-        uid: uid(),
+        uid: guid(),
         username,
         email,
         gamesPlayed: 0,
@@ -389,7 +385,7 @@ class DBManager{
       console.log(err);
     }
   }
-  async addAPIKey(uid, apiKey) {
+  async addAPIKey(uid, apiKey, botUid) {
     const params = {
       TableName: this.TABLE_NAME,
       Key: {
@@ -401,7 +397,12 @@ class DBManager{
       },
       ExpressionAttributeValues: {
         ":empty_list": [],
-        ":apiKey": [apiKey]
+        ":apiKey": [
+          {
+            apiKey,
+            botUid
+          }
+        ]
       }
     };
   
@@ -414,27 +415,43 @@ class DBManager{
   }
   
   async removeAPIKey(uid, apiKey) {
-    const params = {
+    const getParams = {
       TableName: this.TABLE_NAME,
       Key: {
         uid
-      },
-      UpdateExpression: "DELETE #ak :apiKey",
-      ExpressionAttributeNames: {
-        "#ak": "api_keys"
-      },
-      ExpressionAttributeValues: {
-        ":apiKey": this.dynamoClient.createSet([apiKey])
       }
     };
   
     try {
-      const data = await this.dynamoClient.update(params).promise();
+      let data = await this.dynamoClient.get(getParams).promise();
+      const apiKeys = data.Item.api_keys || [];
+  
+      // Remove the apiKey from the list
+      const updatedKeys = apiKeys.filter(key => key.apiKey !== apiKey);
+  
+      const updateParams = {
+        TableName: this.TABLE_NAME,
+        Key: {
+          uid
+        },
+        UpdateExpression: "SET #ak = :updatedKeys",
+        ExpressionAttributeNames: {
+          "#ak": "api_keys"
+        },
+        ExpressionAttributeValues: {
+          ":updatedKeys": updatedKeys
+        },
+        ReturnValues: "UPDATED_NEW"
+      };
+  
+      // Update the item with the modified list
+      data = await this.dynamoClient.update(updateParams).promise();
       return data;
     } catch (err) {
       console.log(err);
     }
   }
+  
   
   async sendVerification(email, code) {
     const params = {
@@ -469,7 +486,6 @@ class DBManager{
   }
 }
 
-cleanAPIKeys();
 
 const dbManager = new DBManager();
 module.exports = {

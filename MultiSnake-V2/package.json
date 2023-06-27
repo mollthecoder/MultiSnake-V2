@@ -1,12 +1,12 @@
 {
   "name": "nodejs",
-  "version": "2.1.2",
+  "version": "2.1.4",
   "description": "",
   "source": "src/index.js",
   "main": "src/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "call env.bat && node src/index.js"
+    "start": "call env.bat && node --experimental-worker src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +23,7 @@
     "morgan": "^1.10.0",
     "node-fetch": "^3.2.6",
     "nunjucks": "^3.2.4",
+    "safe-marked": "^15.0.0",
     "server": "^1.0.38",
     "socket.io": "^4.6.1",
     "sqlite": "^4.2.1",

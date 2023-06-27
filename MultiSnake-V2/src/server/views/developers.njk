@@ -2,6 +2,7 @@
 {% block head %}
 <link href = "/css/developers.css" rel = "stylesheet">
 <title>Developers | MultiSnake</title>
+<script>window.userUID = "{{ user.uid }}"</script>
 {% endblock %}
 
 {% block main %}
@@ -13,23 +14,27 @@
             <div>
                 <h1 class="heading">Developer Dashboard</h1>
                 <p>Welcome to the developer dashboard</p>
+                <p>Keep your API keys secret. Your bot UIDs can be public. Tutorials on making bots soon rolling out</p>
             </div>
             <div class = "table-container">
                 <table>
                     <thead class = "table-head">
                         <tr>
                             <th>ID</th>
-                            <th class = "uid">Uid</th>
+                            <th class = "apiKeu">API Key</th>
+                            <th class = "uid">Bot UID</th>
                             <th class = "manage">Manage</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for uid in user.api_keys.values %}
+                        {% for key in user.api_keys %}
                             <tr class = "table-row" id="row-{{ loop.index0 }}">
                                 <td><b>{{ loop.index0 }}</b></td>
-                                <td class = "uid">{{ uid }}</td>
+                                <td class = "apiKey">{{ key.apiKey }}</td>
+                                <td class = "uid">{{ key.botUid }}</td>
                                 <td class = "manage">
                                     <button class = "btn btn-inline copy-key" data-row="{{ loop.index0 }}">Copy Key</button>
+                                    <button class = "btn btn-inline copy-uid" data-row="{{ loop.index0 }}">Copy UID</button>
                                     <button class = "btn btn-danger btn-inline delete-key" data-row = "{{ loop.index0 }}">Delete</button>
                                 </td>
                             </tr>
@@ -37,7 +42,7 @@
                     </tbody>
                 </table>
             </div>
-            <button class = "btn" id = "add">Add Another Key</button>
+            <button class = "btn" id = "add-key">Add Another Key</button>
             {% else %}
                 <h1 class="heading">Developer Dashboard</h1>
                 <p><a href = "/verifyEmail">Verify your email</a> to create bots<p>
@@ -52,5 +57,5 @@
 {% endif %}
 {% endblock %}
 {% block footer %}
-    <script src = "/js/developers.js"></script>
+    <script src = "/js/developers.js" defer></script>
 {% endblock %}

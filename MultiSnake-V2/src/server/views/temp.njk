@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  
+    <script src = "/js/helpers.js" defer></script>
   <meta charset="UTF-8">
   <link rel = "canonical" href = "https://multisnake.xyz">
    <link rel = "icon" href= "multisnake-favicon.png">
@@ -35,7 +35,7 @@
       </div>
       <div class = "nav-right">
       {% if user %}
-      {# <a href = "/developers">Developers</a> #}
+      <a href = "/developers">Developers</a>
       <a href = "/account">Profile</a>
       <a href = "/logout">Logout</a>
       {% else %}
@@ -55,5 +55,5 @@
   </footer>
   {% endblock %}
   <div id = "notif-box"></div>
-  <script src = "/js/helpers.js"></script>
+  
 </body>
