@@ -1,50 +1,8 @@
 const { generateName,sumArrays,oddsOf,pickColor } = require("../etc/helpers.js");
 const { Snake } = require("../objects/snake.js");
 const { manager } = require("../managers/roomManager.js");
-const makePredictions = require("../../AI/makePredictions.js");
 
-class AIBot extends Snake{
-  constructor(uid,room,type){
-    super(uid,generateName(),pickColor(), room,
-              [Math.floor(Math.random() * (manager.getRoom(room).size*0.75)),Math.floor(Math.random() * (manager.getRoom(room).size*0.75))]
-         );
-    this.isBot = true;
-    this.bot = true;
-  }
-  move(){
-    this.getMove();
-    var head = this.body[0];
-    var newBlock = sumArrays(head,this.directionMap[this.direction]);
-    if(!this.eating){
-      this.body.pop();
-    }else{
-      this.eating = false;
-    }
-    this.body.unshift(newBlock);
-  }
-  getMove(){
-    var matrix = [];
-    var r = this.getRoom();
-    for(var i = 0; i < r.size; i++){
-      matrix[i] = [];
-      for(var j = 0;j < r.size; j++){
-        matrix[i][j] = 0;
-      }
-    }
-  
-    for(var i = 0; i < r.snakes.length; i++){
-      r.snakes[i].body.forEach(part=>{
-        matrix[part[0]][part[1]] = (r.snakes[i].uid == this.uid) ? 1 : 0.5;
-      });
-    }
-    for(var i =0; i < r.walls.length; i++){
-      matrix[r.walls[i][0]][r.walls[i][1]] = 0.25;
-    }
-    matrix[r.apple[0]][r.apple[1]] = 0.75;
-    var preds = makePredictions(matrix)
-    this.direction = preds[0];
-  }
-}
+
 class Bot extends Snake{
   constructor(uid,room,type){
     super(uid,generateName(),pickColor(), room,

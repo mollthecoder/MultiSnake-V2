@@ -46,7 +46,7 @@ gameManager.js
   - gameManager.roomManager: # room manager object
   - gameManager.tick: # tick speed in milliseconds
   - gameManager.__init__(): # runs server ticks, emits board
-  - mapData(roomObject): # maps the rooms contents to a matrix
+  - mapData(roomObject) # maps the rooms contents to a matrix
       # enemy snakes are marked by 1
       # player snake marked as 0.5
       # walls marked as 0.25
