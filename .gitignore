@@ -8,3 +8,4 @@ env.bat
 SoDB
 ecosystem.config.js
 *.log
+.parcel-cache
