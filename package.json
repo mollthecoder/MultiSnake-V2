@@ -6,8 +6,8 @@
   "main": "src/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "call env.bat && node --experimental-worker src/index.js",
-    "build": "parcel build src/index.js --dist-dir ./dist"
+    "start": "call env.bat && node src/index.js",
+    "build": "parcel build src/index.js"
   },
   "keywords": [],
   "author": "",
