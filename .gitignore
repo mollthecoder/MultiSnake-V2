@@ -9,3 +9,5 @@ SoDB
 ecosystem.config.js
 *.log
 .parcel-cache
+main.js
+main.js.map
