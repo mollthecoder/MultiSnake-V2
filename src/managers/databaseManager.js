@@ -116,7 +116,7 @@ class ApiKeyManager {
   }
   async getAPIKey(apiKey) {
     try {
-      const row = await this.db.get(`SELECT expiredAt, uid FROM api_keys WHERE api_key = ?`, [apiKey]);
+      const row = await this.db.get(`SELECT * FROM api_keys WHERE api_key = ?`, [apiKey]);
       if (!row) {
         return false;
       } else {
