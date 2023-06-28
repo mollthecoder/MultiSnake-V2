@@ -158,6 +158,7 @@ app.get('/logout', (req, res) => {
 app.delete("/deleteKey",mustBeLoggedIn("You must be logged in to delete an API key"),async (req,res)=>{
     const { uid, api_key } = req.body;
     await dbManager.removeAPIKey(uid,api_key);
+    await apiKeyManager.deleteKey(api_key);
     res.status(200).json({
         message:`${api_key} successfully deleted`,
         color: "green"

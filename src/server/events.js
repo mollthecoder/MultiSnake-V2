@@ -149,6 +149,8 @@ io.on("connection", (socket) => {
                 message: "API key does not exist"
             })
         } else if (key_data.uid == data.uid) {
+            console.log(key_data);
+            console.log(key_data.isBot == 1 || key_data.expiredAt > new Date().getTime())
             if (key_data.isBot == 1 || key_data.expiredAt > new Date().getTime()) {
                 var snake = manager.getSnake(data.uid);
                 if (snake && !isEmptyObject(snake)) {
