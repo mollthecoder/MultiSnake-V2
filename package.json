@@ -7,6 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "call env.bat && node src/index.js",
+    "dev":". .bashrc && node src/index.js",
     "build": "parcel build src/index.js"
   },
   "keywords": [],
