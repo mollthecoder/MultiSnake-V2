@@ -42,7 +42,7 @@ io.on("connection", (socket) => {
             SPAWN_REQUEST_TRACKER[socket.id] = {
                 willSpawnBot: data.bot,
                 uid: (data.uid) ? data.uid || guid() : guid(),
-                api_key: data.api_key
+                api_key: data.api_key,
             }
         }
         var username = (data.username) ? data.username : generateName();
@@ -77,15 +77,15 @@ io.on("connection", (socket) => {
     socket.on("join_request", async (data) => {
         var room = data.room;
         var api_key = data.api_key;
+        var bot = data.bot || false;
         var uidPlease = data.uidPlease;
         var key_data = await apiKeyManager.getAPIKey(api_key);
-
         var roomString = data.room;
         var roomType = roomString.split("-")[0] || "standard";
         var room = roomString;
         var roomToJoin = manager.getRoom(room);
         var id = (uidPlease) ? uidPlease : guid();
-        var loggedIn = (uidPlease) ? true : false;
+        var loggedIn = (uidPlease && !bot) ? true : false;
 
         var room_key = null;
         if (roomToJoin) {
@@ -142,7 +142,6 @@ io.on("connection", (socket) => {
         var snake = manager.getSnake(data.uid);
 
         var key_data = await apiKeyManager.getAPIKey(api_key);
-
         if (!key_data) {
             socket.emit("error", {
                 code: 102,
@@ -180,7 +179,6 @@ io.on("connection", (socket) => {
             var snake = manager.getSnake(data.uid);
 
             var key_data = await apiKeyManager.getAPIKey(api_key);
-
             if (!key_data) {
                 socket.emit("error", {
                     code: 102,
