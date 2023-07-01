@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <link rel = "canonical" href = "https://multisnake.xyz">
+        <link rel = "icon" href= "multisnake-favicon.png">
+        <script src="https://kit.fontawesome.com/ec5f6502ae.js" crossorigin="anonymous"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name = "description" content = "MultiSnake is an MMS-Massively Multiplayer snake! Chat with other players, don't run into walls, and play in many different game modes!">
+        <meta name="keywords" content = "multiplayer, snake, multiplayer snake, multisnake, sojs">
+        <meta charset="utf-8">
+        <link rel ="stylesheet" href = "/css/docs.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Obejcts | Multisnake V2 Docs</title>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-DBKFRBYTHY"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+
+            gtag('config', 'G-DBKFRBYTHY');
+        </script>
+        <link rel="stylesheet" href="https://stackedit.io/style.css"/>
+    </head>
+
+    <body class="stackedit">
+
+        <header>
+            <nav>
+                <div class = "nav-left">
+                    <a href = "/">Home</a>
+                    <a href = "/play/standard_0?type=standard">Play Now</a>
+                    <a href = "//discord.gg/Np7vBvEtp2">Discord</a>
+                </div>
+                <div class = "nav-right">
+                    <a href = "/docs/docs.htm" class = "active">Documentation</a>
+                </div>
+            </nav>
+        </header>
+        <div class="stackedit__left">
+            <div class="stackedit__toc">
+
+                <ul>
+                    <li>
+                        <a href="#objects">Objects</a>
+                        <ul>
+                            <li>
+                                <a href="#room">Room</a>
+                                <ul>
+                                    <li>
+                                        <a href="#base-room-class">Base Room class</a>
+                                    </li>
+                                    <li>
+                                        <a href="#standard-room-class">Standard Room Class</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#snake">Snake</a>
+                                <ul>
+                                    <li>
+                                        <a href="#base-snakes">Base snakes</a>
+                                    </li>
+                                    <li>
+                                        <a href="#game-created-bot-snakes">Game-created bot snakes</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#coordinate">Coordinate</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+        <div class="stackedit__right">
+            <div class="stackedit__html">
+                <h1 id="objects">Objects</h1>
+                <h2 id="room">Room</h2>
+                <h3 id="base-room-class">Base Room class</h3>
+                <ul>
+                    <li>
+                        <code>room.uid</code> - unique identifier for the room</li>
+                    <li>
+                        <code>room.snakes</code> - array of <a href="#snake">snakes</a>
+                    </li>
+                    <li>
+                        <code>room.apple</code> - position of apple as a <a href="#coordinate">coordinate</a>
+                    </li>
+                    <li>
+                        <code>room.name</code> - name of room</li>
+                    <li>
+                        <code>room.size</code> - size of room (X by X)</li>
+                    <li>
+                        <code>room.tick</code> - speed at which snake positions are updates (in milliseconds)</li>
+                </ul>
+                <h3 id="standard-room-class">Standard Room Class</h3>
+                <ul>
+                    <li>
+                        <code>room.walls</code> - array of walls, each wall a <a href="#coordinate">coordinate</a>
+                    </li>
+                </ul>
+                <h2 id="snake">Snake</h2>
+                <h3 id="base-snakes">Base snakes</h3>
+                <ul>
+                    <li>
+                        <code>snake.uid</code> - unique identifier for each snake</li>
+                    <li>
+                        <code>snake.name</code> - name of snake as appears on the leaderboard</li>
+                    <li>
+                        <code>snake.color</code> - this does nothing yet</li>
+                    <li>
+                        <code>snake.bot</code> - boolean whether snake is a bot or not</li>
+                    <li>
+                        <code>snake.loggedIn</code> - boolean whether the snake is a logged in user or not</li>
+                    <li>
+                        <code>snake.directionMap</code> - translates a string direction to a vector (eg <code>snake.directionMap["up"]</code> gives you <code>[0,1]</code>)</li>
+                    <li>
+                        <code>snake.body</code> - array of body parts, each part a <a href="#coordinate">coordinate</a>
+                        <ul>
+                            <li>the first part of the body being the snake’s head</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <code>snake.direction</code> - the current direction of the snake</li>
+                    <li>
+                        <code>snake.score</code> - <strong>deprecated</strong> use <code>snake.body.length</code>
+                    </li>
+                    <li>
+                        <code>snake.speed</code> - does nothing yet, always 0</li>
+                    <li>
+                        <code>snake.room</code> - UID of the <a href="#room">room</a> that the snake is currently in</li>
+                    <li>
+                        <code>snake.eating</code> - boolean wether the snake ate an apple the last tick</li>
+                    <li>
+                        <code>snake.creationTime</code> - timestamp for when the snake we spawned in the room</li>
+                </ul>
+                <h3 id="game-created-bot-snakes">Game-created bot snakes</h3>
+                <p>
+                    <em>All of the following attributes only exist in snakes created by the game</em>
+                </p>
+                <ul>
+                    <li>
+                        <code>snake.isBot</code> - always true for game created snakes</li>
+                    <li>
+                        <code>snake.minMistakesPerTickPercent</code> - minimum percent of times that the snake makes a mistake</li>
+                    <li>
+                        <code>snake.oddsOfMistakePerTick</code> - odds of whether the snake does not make a mistake. The lower this is the better the snake</li>
+                    <li>
+                        <code>snake.inverseMap</code> - hash map inverting directions. (Eg. <code>up</code> to <code>down</code>, <code>left</code> to <code>right</code>, etc)</li>
+                    <li>
+                        <code>snake.shiftInverseMap</code> - list of valid directions the snake can go if it wants to turn back onto itself. Eg. “up” allows “right” and “left”</li>
+                </ul>
+                <h2 id="coordinate">Coordinate</h2>
+                <ul>
+                    <li>
+                        <code>coordinate[0]</code>: X value</li>
+                    <li>
+                        <code>coordinate[1]</code>: Y value</li>
+                </ul>
+
+            </div>
+        </div>
+    </body>
+
+</html>

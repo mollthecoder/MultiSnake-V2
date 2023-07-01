@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+<link rel = "canonical" href = "https://multisnake.xyz">
+   <link rel = "icon" href= "multisnake-favicon.png">
+    <script src="https://kit.fontawesome.com/ec5f6502ae.js" crossorigin="anonymous"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name = "description" content = "MultiSnake is an MMS-Massively Multiplayer snake! Chat with other players, don't run into walls, and play in many different game modes!">
+  <meta name="keywords" content = "multiplayer, snake, multiplayer snake, multisnake, sojs">
+  <meta charset="utf-8">
+  <link rel ="stylesheet" href = "/css/docs.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error Codes | MultiSnake V2 Docs</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DBKFRBYTHY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DBKFRBYTHY');
+</script>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+
+  <header>
+    <nav>
+      <div class = "nav-left">
+        <a href = "/">Home</a>
+        <a href = "/play/standard_0?type=standard">Play Now</a>
+        <a href = "//discord.gg/Np7vBvEtp2">Discord</a>
+      </div>
+      <div class = "nav-right">
+      <a href = "/docs/docs.htm" class = "active">Documentation</a>
+      </div>
+    </nav>
+  </header>
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+      
+<ul>
+<li><a href="#error-documentation">Error Documentation</a>
+<ul>
+<li><a href="#xx-codes">1XX codes</a></li>
+<li><a href="#xx-codes-1">2XX codes</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+  </div>
+  <div class="stackedit__right">
+    <div class="stackedit__html">
+      <h1 id="error-documentation">Error Documentation</h1>
+<h2 id="xx-codes">1XX codes</h2>
+<p>All of these codes are API key related… the key may no longer be valid, not exist, or already have a player in that room associated with it.</p>
+<ul>
+<li>100 - a player already exists with that API key. This error will be sent along with the snake that has that key. Often, this just means that your snake is already in that room. It could also mean that your key was leaked and another person is using it to make their own robots</li>
+<li>101 - your API key is expired. If you ever get this error when making a bot, double check you received your key from the <a href="/developers">developer page</a>. If you did, reach out to the developers.</li>
+<li>102 - your API key does not exist. Double check to see that you did not accidentally remove the key from the <a href="/developers">developer page</a>, or that your key matches the UID and vise versa.</li>
+<li>103 - API key and UID mismatch. Once again, double check everything. Make sure you copied and pasted from the correct row on the <a href="/developers">developer page</a>.</li>
+</ul>
+<h2 id="xx-codes-1">2XX codes</h2>
+<ul>
+<li>200 - Bad words failed to clean. this will only happen if your bot sends chat messages.</li>
+</ul>
+
+    </div>
+  </div>
+</body>
+
+</html>

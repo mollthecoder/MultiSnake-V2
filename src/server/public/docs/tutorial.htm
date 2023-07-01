@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link rel = "canonical" href = "https://multisnake.xyz">
+    <link rel = "icon" href= "multisnake-favicon.png">
+    <script src="https://kit.fontawesome.com/ec5f6502ae.js" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name = "description" content = "MultiSnake is an MMS-Massively Multiplayer snake! Chat with other players, don't run into walls, and play in many different game modes!">
+    <meta name="keywords" content = "multiplayer, snake, multiplayer snake, multisnake, sojs">
+    <meta charset="utf-8">
+    <link rel ="stylesheet" href = "/css/docs.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MultiSnake Bot Tutorial | MultiSnake V2 Docs</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DBKFRBYTHY"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-DBKFRBYTHY');
+    </script>
+    <link rel="stylesheet" href="https://stackedit.io/style.css"/>
+  </head>
+
+  <body class="stackedit">
+
+    <header>
+      <nav>
+        <div class = "nav-left">
+          <a href = "/">Home</a>
+          <a href = "/play/standard_0?type=standard">Play Now</a>
+          <a href = "//discord.gg/Np7vBvEtp2">Discord</a>
+        </div>
+        <div class = "nav-right">
+          <a href = "/docs/docs.htm" class = "active">Documentation</a>
+        </div>
+      </nav>
+    </header>
+    <div class="stackedit__left">
+      <div class="stackedit__toc">
+
+        <ul>
+          <li>
+            <a href="#multisnake-developer-documentation">MultiSnake Developer Documentation</a>
+            <ul>
+              <li>
+                <a href="#first-steps">First steps</a>
+              </li>
+              <li>
+                <a href="#player-bot">Player Bot</a>
+              </li>
+              <li>
+                <a href="#chat-bot">Chat bot</a>
+                <ul>
+                  <li>
+                    <a href="#getting-started-with-chatbots">Getting Started With Chatbots</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+    <div class="stackedit__right">
+      <div class="stackedit__html">
+        <h1 id="multisnake-developer-documentation">MultiSnake Developer Documentation</h1>
+        <h2 id="first-steps">First steps</h2>
+        <p>Head over to <a href="/developers">the developer page</a> to grab you API keys. Hit “Add key”, then navigate your favorite code editor.<br>
+The wrapper class for managing bots is only available in nodejs as of the time of this writing. If you want to create one without the<br>
+First, install the module using the following code</p>
+        <pre><code>npm install multisnake-bot-api
+</code></pre>
+        <p>Then, import it into your code.</p>
+        <pre class=" language-js"><code class="prism  language-js"><span class="token keyword">const</span> <span class="token punctuation">{</span> BotManager<span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"multisnake-bot-api"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+        <h2 id="player-bot">Player Bot</h2>
+        <p>You can then create a new bot using the <code>BotManager</code> class.</p>
+        <pre class=" language-js"><code class="prism  language-js"><span class="token keyword">let</span> myBot <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">BotManager</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+	name<span class="token punctuation">:</span> <span class="token string">"My Super Cool Bot"</span><span class="token punctuation">,</span>
+	rooms<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"classic-classic_0"</span><span class="token punctuation">,</span><span class="token string">"classic-classic_1"</span><span class="token punctuation">,</span><span class="token string">"standard-standard_0"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+	log<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+	botOpts<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+		api_key<span class="token punctuation">:</span> <span class="token string">"&lt;your api key from the developer page&gt;"</span><span class="token punctuation">,</span> <span class="token comment">// remember to keep this private</span>
+		uid<span class="token punctuation">:</span> <span class="token string">"&lt;your bot's uid from the developer page&gt;"</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	onNeedDirection<span class="token punctuation">:</span> handleDirection
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+        <p>First, we give the bot a name, in this case <code>My Super Cool Bot</code> (it can be anything), then we define what rooms we want to allow it to join. In this case, 3 rooms, two classic room and one standard room. The room names are the same as the name on the play screen, (classic_0, small_1, etc), except the name of the mod is added before. Eg. classic-classic_0, etc.<br>
+Then we specify whether we want to log things to the console or not. This will log when the bot is connected, and other things like that.<br>
+Next, you specify your credentials that we acquired from the developer page. Paste them into their respective spots, but make sure to keep the api_key secret (use environment variables- if you are doing this on replit, click on the secrets tab)</p>
+        <p>Finally, we need to specify how the bot move. We do this using the <code>handleDirection</code> function specified earlier.<br>
+It takes two parameters, <code>board</code> and <code>room</code>, <code>board</code> being an object representing the room, and <code>room</code> being the name of the room.<br>
+For more information, see the <a href="/docs/docs.htm">full documentation</a>.<br>
+For now, we will just create a simple bot that goes towards the apple.</p>
+        <pre class=" language-js"><code class="prism  language-js"><span class="token keyword">function</span> <span class="token function">handleDirection</span><span class="token punctuation">(</span>board<span class="token punctuation">,</span>room<span class="token punctuation">)</span><span class="token punctuation">{</span>
+	<span class="token keyword">let</span> apple <span class="token operator">=</span> board<span class="token punctuation">.</span>apple<span class="token punctuation">;</span>
+	<span class="token keyword">let</span> snake <span class="token operator">=</span> board<span class="token punctuation">.</span>snakes<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>snake <span class="token operator">=&gt;</span> snake<span class="token punctuation">.</span>uid <span class="token operator">==</span> uid<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">let</span> head<span class="token operator">=</span> snake<span class="token punctuation">.</span>body<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+	<span class="token keyword">let</span> dirToGo <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">;</span>
+	<span class="token keyword">if</span><span class="token punctuation">(</span>head<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">&gt;</span> apple<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+      dirToGo <span class="token operator">=</span> <span class="token string">"left"</span>
+    <span class="token punctuation">}</span><span class="token keyword">else</span> <span class="token keyword">if</span><span class="token punctuation">(</span>head<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">&lt;</span> apple<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+      dirToGo <span class="token operator">=</span> <span class="token string">"right"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token keyword">else</span> <span class="token keyword">if</span><span class="token punctuation">(</span>head<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">&gt;</span> apple<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+      dirToGo <span class="token operator">=</span> <span class="token string">"down"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token keyword">else</span> <span class="token keyword">if</span><span class="token punctuation">(</span>head<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">&lt;</span> apple<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+      dirToGo <span class="token operator">=</span> <span class="token string">"up"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+	<span class="token keyword">return</span> dirToGo
+<span class="token punctuation">}</span>
+</code></pre>
+        <p>This bot is very bare bones, and will turn onto itself, not avoid other snakes, and run into walls, but, its a start. For further reading on the board object, see <a href="/docs/objects.htm">the room docs</a>.</p>
+        <p>For the full code, check out <a href="https://replit.com/@sojs/MultiSnake-API-test#index.js">https://replit.com/@sojs/MultiSnake-API-test#index.js</a>.</p>
+        <h2 id="chat-bot">Chat bot</h2>
+        <h3 id="getting-started-with-chatbots">Getting Started With Chatbots</h3>
+        <h4 id="example">Example</h4>
+        <p>Let us pick apart this example.</p>
+        <pre class=" language-js"><code class="prism  language-js"><span class="token keyword">const</span> <span class="token punctuation">{</span> BotManager <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"multisnake-bot-api"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+<span class="token keyword">const</span> delim <span class="token operator">=</span> <span class="token string">"/"</span>
+<span class="token comment">// @param opts</span>
+<span class="token comment">//    options</span>
+<span class="token comment">//      "name" - the name of the bot</span>
+<span class="token comment">//      "api_key" - your API key, retrieved from https://multisnake.xyz/developers (keep this private)</span>
+<span class="token comment">//      "uid" - your bot's UID, also from the developer page. This is public</span>
+<span class="token keyword">const</span> bot <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">BotManager</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"MyAwesomeBot"</span><span class="token punctuation">,</span>
+  <span class="token string">"api_key"</span><span class="token punctuation">:</span>process<span class="token punctuation">.</span>env<span class="token punctuation">.</span>APIKEY<span class="token punctuation">,</span>
+  <span class="token string">"uid"</span><span class="token punctuation">:</span>process<span class="token punctuation">.</span>env<span class="token punctuation">.</span>UID
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// @param command - the command that the user sent</span>
+<span class="token comment">// @return true or false wether the command should be passed to onCommand()</span>
+bot<span class="token punctuation">.</span><span class="token function-variable function">isCommand</span> <span class="token operator">=</span> <span class="token punctuation">(</span>command<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Returns true or false whether or not the given param is a command</span>
+  <span class="token keyword">return</span> command<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span>delim<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+
+<span class="token comment">// @param username - the username of the persone who sent the message</span>
+<span class="token comment">// @param message - the content of the message</span>
+<span class="token comment">// @param sendMessage - function to run in order to send a response</span>
+<span class="token comment">//    @param message - the content of the message to sent</span>
+<span class="token comment">// @param room - UID/name of the room</span>
+bot<span class="token punctuation">.</span>onCommand <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token punctuation">(</span>username<span class="token punctuation">,</span> message<span class="token punctuation">,</span> sendMessage<span class="token punctuation">,</span> room<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> command <span class="token operator">=</span> message<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">" "</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  command <span class="token operator">=</span> command<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span>delim<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> args <span class="token operator">=</span> message<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">" "</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  args<span class="token punctuation">.</span><span class="token function">shift</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">switch</span> <span class="token punctuation">(</span>command<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">case</span> <span class="token string">"room"</span><span class="token punctuation">:</span>
+      <span class="token function">sendMessage</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`Name of this room is </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>room<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">"hi"</span><span class="token punctuation">:</span>
+      <span class="token function">sendMessage</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`Hello, </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>username<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">!`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">"echo"</span><span class="token punctuation">:</span>
+      <span class="token function">sendMessage</span><span class="token punctuation">(</span>args<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">" "</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">break</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>To make a chat bot, we need to overwrite the isCommand method of the bot manager.</p>
+<pre class=" language-js"><code class="prism  language-js">bot<span class="token punctuation">.</span><span class="token function-variable function">isCommand</span> <span class="token operator">=</span> <span class="token punctuation">(</span>command<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+</code></pre>
+<p>The isCommand method is called with one parameter, command, which is a string. If the function returns true, then the bot command will count this as a command.</p>
+<p>This version of isCommand will only count something as a command if they start with “/”</p>
+<pre class=" language-js"><code class="prism  language-js">bot<span class="token punctuation">.</span><span class="token function-variable function">isCommand</span> <span class="token operator">=</span> <span class="token punctuation">(</span>command<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> command<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Okay, there’s quite a bit to unpack in the example below this one. The first parameter, <code>username</code>, is a string that is the username of the person who sent the chat message. Anyone can have any username, so be careful not to use it as a foolproof way to identify someone. <code>message</code>, the text content of the message. <code>sendMessage</code> is a function that allows you to send a reply to this command. It will send a message in the room that this command was executed from. <code>room</code> contains the name of the room the command originated from.</p>
+<pre class=" language-js"><code class="prism  language-js">bot<span class="token punctuation">.</span>onCommand <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token punctuation">(</span>username<span class="token punctuation">,</span> message<span class="token punctuation">,</span> sendMessage<span class="token punctuation">,</span> room<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+</code></pre>
+<p>Then, we grab the command part of the message using <code>split</code>. The command will contain your delimiter, so you have to make sure to chop it off as well. We can do this pretty well using the following two lines.</p>
+<pre class=" language-js"><code class="prism  language-js"><span class="token keyword">let</span> command <span class="token operator">=</span> message<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">" "</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+command <span class="token operator">=</span> command<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span>delim<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>The rest of the message we will store in <code>args</code> for future use, in case any of your commands take parameters.</p>
+<pre class=" language-js"><code class="prism  language-js"><span class="token keyword">let</span> args <span class="token operator">=</span> message<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">" "</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+args<span class="token punctuation">.</span><span class="token function">shift</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><code>args.shift()</code> ensures that the actual command part of the message is left out, and we are left with just the arguments.<br>
+Finally, we can run a simple <code>switch</code> statement to figure out what response we want to send.</p>
+<pre class=" language-js"><code class="prism  language-js"><span class="token keyword">switch</span> <span class="token punctuation">(</span>command<span class="token punctuation">)</span><span class="token punctuation">{</span>
+  <span class="token keyword">case</span> <span class="token string">"room"</span><span class="token punctuation">:</span>
+    <span class="token function">sendMessage</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`Name of this room is </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>room<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">break</span><span class="token punctuation">;</span>
+  <span class="token keyword">case</span> <span class="token string">"hi"</span><span class="token punctuation">:</span>
+    <span class="token function">sendMessage</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`Hello, </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>username<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">!`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">break</span><span class="token punctuation">;</span>
+  <span class="token keyword">case</span> <span class="token string">"echo"</span><span class="token punctuation">:</span>
+    <span class="token function">sendMessage</span><span class="token punctuation">(</span>args<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">" "</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">break</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Notice the usage of <code>args</code> in the last example. This will ensure that when <code>/echo</code> is ran, the bot will repeat back what the user sent after <code>echo</code>. For example, if the user sends <code>/echo hello world</code>, the bot will take off the first bit ,<code>/echo</code>, and compare that to each case in your switch statement. Then, we join <code>args</code> back together (args being <code>["hello","world"]</code>) with a space and sent it right back.</p>
+<p>The very last thing is optional. We can set a default case in the event that the bot does not know how to respond to something.</p>
+<pre class=" language-js"><code class="prism  language-js"><span class="token keyword">switch</span> <span class="token punctuation">(</span>command<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token operator">...</span>
+  <span class="token keyword">default</span><span class="token punctuation">:</span>
+    <span class="token function">sendMessage</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`I could not understand </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>command<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">. I can understand "/room", "/hi", and "/echo"`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">break</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+
+    </div>
+  </div>
+</body>
+
+</html>
