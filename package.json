@@ -1,6 +1,6 @@
 {
   "name": "multisnake",
-  "version": "2.1.5",
+  "version": "2.2.0",
   "description": "",
   "source": "src/index.js",
   "main": "src/main.js",
