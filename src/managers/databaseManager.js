@@ -120,9 +120,7 @@ class ApiKeyManager {
       if (!row) {
         return false;
       } else {
-        const expiredAt = row.expiredAt || 0;
-        const uid = row.uid || null;
-        return { expiredAt, uid };
+        return row;
       }
     } catch (err) {
       console.error('Error retrieving API key:', err);
