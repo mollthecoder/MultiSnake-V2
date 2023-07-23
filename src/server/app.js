@@ -346,7 +346,7 @@ app.get('/api/v1/rooms', (req, res) => {
 });
 
 app.use((req,res)=>{
-    res.render("404.njk");
+    res.status(404).render("404.njk");
 })
 
 
