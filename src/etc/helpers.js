@@ -1,4 +1,4 @@
-const { randomUUID } = require("crypto");
+const { randomUUID, randomBytes } = require("crypto");
 function generateName() {
     var start = [
         'flying',
@@ -90,8 +90,11 @@ function generateAPIKey() {
     let apiKey = '';
 
     for (let i = 0; i < 32; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        apiKey += characters.charAt(randomIndex);
+        const randomIndex = Math.floor(
+          randomBytes(1)[0] /
+          255 * characters.length
+        )
+        apiKey += characters[randomIndex]
     }
 
     return apiKey;
