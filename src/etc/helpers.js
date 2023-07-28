@@ -92,7 +92,7 @@ function generateAPIKey() {
     for (let i = 0; i < 32; i++) {
         const randomIndex = Math.floor(
           randomBytes(1)[0] /
-          255 * characters.length
+          255 * (characters.length-1)
         )
         apiKey += characters[randomIndex]
     }
